@@ -37,14 +37,16 @@ class ofApp : public ofBaseApp{
 
         ofPolyline lineGraph;
     
-//        DmxDevice* dmxInterface_;
-//        unsigned char dmxData_[DMX_DATA_LENGTH];
-//        float red, green, blue;
+        DmxDevice* dmxInterface_;
+        unsigned char dmxData_[DMX_DATA_LENGTH];
+        float red, green, blue;
     
         ofxColorSlider color;
-        ofxIntSlider sensor1Value;
-        ofxIntSlider sensor2Value;
+        ofxFloatSlider yourMamma;
         ofxToggle autoMode;
         ofxPanel gui;
         float trigPos = 0.0;
+    
+        int curWidth;
+        int curHeight;
 };
