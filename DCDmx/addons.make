@@ -1,0 +1,14 @@
+ofx3DModelLoader
+ofxGui
+ofxKinect
+ofxNetwork
+ofxOpenCv
+ofxOsc
+ofxVectorGraphics
+ofxXmlSettings
+ofxArtnet
+ofxCsv
+ofxDmx
+ofxGenericDmx
+ofxJSON
+ofxOAuth
