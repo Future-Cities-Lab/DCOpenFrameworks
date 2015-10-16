@@ -60,6 +60,12 @@ class ofApp : public ofBaseApp{
         float pulseHeightRight;
         float pulseGrowth;
         float pulseDecay;
+    
+    
+        bool trainGrowing;
+        float trainGrowthRate;
+        float trainDecay;
+        float ambientLevel;
 
         struct Wave {
             float a;

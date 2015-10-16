@@ -35,7 +35,7 @@ void ofApp::setup() {
 
     gui.setup(); // most of the time you don't need a name
     gui.add(autoMode.setup("Automate", false));
-    gui.add(color.setup("color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255)));
+    gui.add(color.setup("color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255), 20.0));
 
     curWidth = 1024;
     curHeight = 768;
@@ -51,6 +51,10 @@ void ofApp::setup() {
     pulseHeightRight = 1.01f;
     pulseLeftGrowing = false;
     pulseRightGrowing = false;
+    trainGrowing = false;;
+    trainGrowthRate = 1.009f;
+    trainDecay = 0.98;
+    ambientLevel = 51.0;
 }
 
 //--------------------------------------------------------------
@@ -65,6 +69,9 @@ void ofApp::update() {
                 wave.b = diff + 3*(diff);
                 wave.c = 100.0;
                 wave.bVel = 10.0;
+                if (ofRandom(1.0)>0.5) {
+                    wave.bVel*=-1.0;
+                }
                 wave.growing = true;
                 waves.push_back(wave);
                 pulseLeftGrowing = true;
@@ -75,6 +82,9 @@ void ofApp::update() {
                 wave.b = diff + 10*(diff);
                 wave.c = 100.0;
                 wave.bVel = 10.0;
+                if (ofRandom(1.0)>0.5) {
+                    wave.bVel*=-1.0;
+                }
                 wave.growing = true;
                 waves.push_back(wave);
                 pulseRightGrowing = true;
@@ -116,33 +126,47 @@ void ofApp::update() {
         waves.erase(waves.begin() + pos);
     }
     
+    if (trainGrowing) {
+        ambientLevel *= trainGrowthRate;
+        if (ambientLevel >= 255.0) {
+            ambientLevel = 255.0;
+            trainGrowing = false;
+        }
+    } else if (!trainGrowing && ambientLevel > 51.0) {
+        ambientLevel *= trainDecay;
+        if (ambientLevel <= 51.0) {
+            ambientLevel = 51.0;
+        }
+    }
+    
     for (int x = 0; x < 1024; x++) {
         float newVal = 0.0;
         for (int i = 0; i < waves.size(); i++) {
             newVal += waves[i].curve[x];
         }
-        gaussian[x] = ofClamp(newVal,0.0,255.0);
+        gaussian[x] = ofMap(ofClamp(newVal,0.0,255.0),0.0,255.0,ambientLevel,255.0);
     }
    
     int diff = 1024/numBars;
     for (int x = diff/2; x < 1024 + (diff/2); x+=diff) {
-        barBrightness[x/diff] = ofMap(gaussian[x],0.0, (curHeight/4.0) - 6.0, 31.875, 255.0);
+        ofColor c = color;
+        barBrightness[x/diff] = gaussian[x];
     }
     
     ofColor colorToSend = color;
-    colorToSend.setBrightness(barBrightness[9]);
+    colorToSend.setBrightness(barBrightness[12]);
     dmxData_[1] = int(colorToSend.r);
     dmxData_[2] = int(colorToSend.g);
     dmxData_[3] = int(colorToSend.b);
-    colorToSend.setBrightness(barBrightness[10]);
+    colorToSend.setBrightness(barBrightness[11]);
     dmxData_[4] = int(colorToSend.r);
     dmxData_[5] = int(colorToSend.g);
     dmxData_[6] = int(colorToSend.b);
-    colorToSend.setBrightness(barBrightness[11]);
+    colorToSend.setBrightness(barBrightness[10]);
     dmxData_[7] = int(colorToSend.r);
     dmxData_[8] = int(colorToSend.g);
     dmxData_[9] = int(colorToSend.b);
-    colorToSend.setBrightness(barBrightness[12]);
+    colorToSend.setBrightness(barBrightness[9]);
     dmxData_[10] = int(colorToSend.r);
     dmxData_[11] = int(colorToSend.g);
     dmxData_[12] = int(colorToSend.b);
@@ -161,7 +185,6 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    //ofBackground(0.0);
     ofBackgroundGradient(ofColor(25.0,25.0,25.0), ofColor::black);
 
     int diff = curWidth/numBars;
@@ -169,13 +192,17 @@ void ofApp::draw(){
     ofSetColor(185.0);
     ofFill();
     
-//    int val = sensor1Value;
-//    ofDrawBitmapString("Sensor 1 :" + ofToString(val) + "dB", diff + 3*(diff) - 50.0, (curHeight/4.0)-2.0);
-//    val = sensor2Value;
-//    ofDrawBitmapString("Sensor 2 :" + ofToString(val) + "dB", diff + 10*(diff) - 50.0, (curHeight/4.0)-2.0);
+    ofDrawBitmapString("K", diff + 3*(diff)-4, curHeight/2 + 20);
+    ofDrawBitmapString("L", diff + 10*(diff)-2, curHeight/2 + 20);
+    ofDrawBitmapString("Press 'T' for train simulation", 0.0, ofGetHeight()-100.0);
 
     ofEllipse(diff + 3*(diff), curHeight/2, 10, 10);
     ofEllipse(diff + 10*(diff), curHeight/2, 10, 10);
+    
+    ofSetColor(31.875);
+    ofFill();
+    ofRect(diff + 8*(diff)-1, (curHeight/4.0), 3, 2.0*(curHeight/4.0));
+    ofRect(diff + 12*(diff)-1, (curHeight/4.0), 3, 2.0*(curHeight/4.0));
 
     
     // Draw the sections
@@ -186,19 +213,21 @@ void ofApp::draw(){
     
     // Display the sound curve
     for (int i = 0; i < curWidth; i++) {
-        ofSetColor(185.0);
+        ofColor c = color;
+        c.setBrightness(gaussian[i]);
+        ofSetColor(c);
         ofFill();
-        ofEllipse(i, curHeight/4.0 - ofMap(gaussian[i],0.0,255.0,0.0,180.0), 2,2);
+        ofEllipse(i, curHeight/4.0 - ofMap(gaussian[i], 0.0, 255.0, 0.0, 180.0), 2, 2);
     }
     
-    ofSetColor(color);
+    ofSetColor(255.0);
     ofFill();
     
     vector<ofPoint> pts;
     
-    pts.push_back(ofPoint(diff + 3*(diff) - 40,ofGetHeight()));
+    pts.push_back(ofPoint(diff + 3*(diff) - 60,ofGetHeight()));
     pts.push_back(ofPoint(diff + 3*(diff), ofGetHeight()-pulseHeightLeft));
-    pts.push_back(ofPoint(diff + 3*(diff) + 40,ofGetHeight()));
+    pts.push_back(ofPoint(diff + 3*(diff) + 60,ofGetHeight()));
     ofPolyline line(pts);
     line.draw();
     
@@ -212,9 +241,9 @@ void ofApp::draw(){
     
     
     pts.clear();
-    pts.push_back(ofPoint(diff + 10*(diff) - 40,ofGetHeight()));
+    pts.push_back(ofPoint(diff + 10*(diff) - 60,ofGetHeight()));
     pts.push_back(ofPoint(diff + 10*(diff), ofGetHeight()-pulseHeightRight));
-    pts.push_back(ofPoint(diff + 10*(diff) + 40,ofGetHeight()));
+    pts.push_back(ofPoint(diff + 10*(diff) + 60,ofGetHeight()));
     ofPolyline line2(pts);
     line2.draw();
 
@@ -228,7 +257,7 @@ void ofApp::draw(){
     
     ofSetColor(185.0);
     ofFill();
-    ofDrawBitmapString("Light %:", 0, 3.0*curHeight+16.0);
+    ofDrawBitmapString("%:", 0, 3.0*(curHeight/4.0)+16.0);
     ofSetColor(31.875);
     ofFill();
     ofRect(0.0, 3.0*(ofGetHeight()/4.0)+20.0, curWidth, 4.0);
@@ -240,13 +269,12 @@ void ofApp::draw(){
     ofRect(0.0, 3.0*(ofGetHeight()/4.0)+40.0, curWidth, 4.0);
 
     for (int x = diff/2; x < curWidth + (diff/2); x+=diff) {
-        //if (x != diff/2 && x !)
         ofColor thisBarsColor = color;
         float brightness = barBrightness[(x/diff)];
         ofSetColor(185.0);
         ofFill();
         ofDrawBitmapString(ofToString((int)ofMap(brightness, 0.0, 255.0, 0.0, 100.0)), x, 3.0*(curHeight/4.0)+16.0);
-        ofDrawBitmapString(ofToString((int)ofMap(brightness, 0.0, 255.0, 20.0, 60.0)), x, 3.0*(curHeight/4.0)+38.0);
+        ofDrawBitmapString(ofToString((int)ofMap(brightness, 0.0, 255.0, 0.0, 70.0)), x, 3.0*(curHeight/4.0)+38.0);
         thisBarsColor.setBrightness(brightness);
         ofSetColor(thisBarsColor);
         ofFill();
@@ -267,6 +295,9 @@ void ofApp::keyPressed(int key) {
         wave.b = diff + 3*(diff);
         wave.c = 100.0;
         wave.bVel = 10.0;
+        if (ofRandom(1.0)>0.5) {
+            wave.bVel*=-1.0;
+        }
         wave.growing = true;
         waves.push_back(wave);
         pulseLeftGrowing = true;
@@ -278,10 +309,15 @@ void ofApp::keyPressed(int key) {
         wave.b = diff + 10*(diff);
         wave.c = 100.0;
         wave.bVel = 10.0;
+        if (ofRandom(1.0)>0.5) {
+            wave.bVel*=-1.0;
+        }
         wave.growing = true;
         waves.push_back(wave);
         pulseRightGrowing = true;
 
+    } else if (key == 116) {
+        trainGrowing = true;
     }
 
 }
