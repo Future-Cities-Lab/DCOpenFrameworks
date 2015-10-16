@@ -33,8 +33,7 @@ class ofApp : public ofBaseApp{
         float gaussianSensor1[1024];
         float gaussianSensor2[1024];
         float gaussian[1024];
-
-
+    
         ofPolyline lineGraph;
     
         DmxDevice* dmxInterface_;
@@ -49,4 +48,26 @@ class ofApp : public ofBaseApp{
     
         int curWidth;
         int curHeight;
+    
+        float decayRate;
+        float growthRate;
+        float aGrowthRate;
+        float bAccel;
+    
+        bool pulseLeftGrowing;
+        bool pulseRightGrowing;
+        float pulseHeightLeft;
+        float pulseHeightRight;
+        float pulseGrowth;
+        float pulseDecay;
+
+        struct Wave {
+            float a;
+            float b;
+            float c;
+            float bVel;
+            float curve[1024];
+            bool growing;
+        };
+        vector<Wave> waves;
 };

@@ -16,7 +16,7 @@ void ofApp::setup() {
     float r = 0.4f;
     for (int i = 0; i < numBars; i++) {
         barHeights[i] = r*(ofGetHeight()/2);
-        r*=1.06f;
+        r *= 1.06f;
     }
     
     //zero our DMX value array
@@ -36,50 +36,95 @@ void ofApp::setup() {
     gui.setup(); // most of the time you don't need a name
     gui.add(autoMode.setup("Automate", false));
     gui.add(color.setup("color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255)));
-    gui.add(yourMamma.setup("AutoSpeed", 0.0, 0.0, 1.0));
 
     curWidth = 1024;
     curHeight = 768;
+    
+    decayRate = 0.99f;
+    growthRate = 1.0001f;
+    aGrowthRate = 3.0f;
+    bAccel = 0.99;
+    
+    pulseGrowth = 19.0;
+    pulseDecay = 0.5f;
+    pulseHeightLeft = 1.01f;
+    pulseHeightRight = 1.01f;
+    pulseLeftGrowing = false;
+    pulseRightGrowing = false;
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
     
-    int functionLength = 500;
-    
-    
-    int diff = 1024/numBars;
-    
-    float c1 = 0.0f;
-    float c2 = 0.0f;
-    
     if (autoMode) {
-        c1 = ofMap(ofMap(sin(trigPos),-1.0,1.0,85,115),85,115,0.0,100.0);
-        c2 = ofMap(ofMap(cos(trigPos),-1.0,1.0,85,115),85,115,0.0,100.0);
-        trigPos += yourMamma;
+        if (ofRandom(1.0) > 0.99) {
+            if (ofRandom(1.0) > 0.5) {
+                int diff = 1024/numBars;
+                Wave wave;
+                wave.a = 1.1f;
+                wave.b = diff + 3*(diff);
+                wave.c = 100.0;
+                wave.bVel = 10.0;
+                wave.growing = true;
+                waves.push_back(wave);
+                pulseLeftGrowing = true;
+            } else {
+                int diff = 1024/numBars;
+                Wave wave;
+                wave.a = 1.1f;
+                wave.b = diff + 10*(diff);
+                wave.c = 100.0;
+                wave.bVel = 10.0;
+                wave.growing = true;
+                waves.push_back(wave);
+                pulseRightGrowing = true;
+            }
+        }
+    }
+    
+    for (int i = 0; i < waves.size(); i++) {
+        for (int x = 0; x < 1024; x++) {
+            float top = pow(x-waves[i].b,2);
+            float bottom = 2*pow(waves[i].c,2);
+            waves[i].curve[x] = waves[i].a*exp(-(top/bottom));
+        }
+        waves[i].b += waves[i].bVel;
+        if (waves[i].b >= ofGetWidth() || waves[i].b <= 0) {
+            waves[i].bVel*=-1;
+        }
+        if (waves[i].a < (curHeight/4.0) - 6.0 && waves[i].growing) {
+            waves[i].a*=aGrowthRate;
+        } else {
+            waves[i].growing = false;
+            waves[i].a*=decayRate;
+        }
+        if (!waves[i].growing) {
+            waves[i].bVel*=bAccel;
+        }
+        waves[i].c*=growthRate;
+
     }
 
-    float a = (curHeight/4.0) - 6.0;
-    float b1 = diff + 3*(diff);
-    float b2 = diff + 10*(diff);
-
-    // TODO(COLLIN): FIX RESIZE HERE
-    for (int x = 0; x < 1024; x++) {
-        float top = pow(x-b1,2);
-        float bottom = 2*pow(c1,2);
-        gaussianSensor1[x] = a*exp(-(top/bottom));
+    vector<int> toErase;
+    for (int i = 0; i < waves.size(); i++) {
+        if (waves[i].a < 1.0) {
+            toErase.push_back(i);
+        }
+    }
+    for (int i = 0; i < toErase.size(); i++) {
+        int pos = toErase[i];
+        waves.erase(waves.begin() + pos);
     }
     
     for (int x = 0; x < 1024; x++) {
-        float top = pow(x-b2,2);
-        float bottom = 2*pow(c2,2);
-        gaussianSensor2[x] = a*exp(-(top/bottom));
-    }
-    
-    for (int x = 0; x < 1024; x++) {
-        gaussian[x] = ofClamp(gaussianSensor1[x]+gaussianSensor2[x],0.0,255.0);
+        float newVal = 0.0;
+        for (int i = 0; i < waves.size(); i++) {
+            newVal += waves[i].curve[x];
+        }
+        gaussian[x] = ofClamp(newVal,0.0,255.0);
     }
    
+    int diff = 1024/numBars;
     for (int x = diff/2; x < 1024 + (diff/2); x+=diff) {
         barBrightness[x/diff] = ofMap(gaussian[x],0.0, (curHeight/4.0) - 6.0, 31.875, 255.0);
     }
@@ -124,10 +169,10 @@ void ofApp::draw(){
     ofSetColor(185.0);
     ofFill();
     
-    //int val = sensor1Value;
-    //ofDrawBitmapString("Sensor 1 :" + ofToString(val) + "dB", diff + 3*(diff) - 50.0, (curHeight/4.0)-2.0);
-    //val = sensor2Value;
-    //ofDrawBitmapString("Sensor 2 :" + ofToString(val) + "dB", diff + 10*(diff) - 50.0, (curHeight/4.0)-2.0);
+//    int val = sensor1Value;
+//    ofDrawBitmapString("Sensor 1 :" + ofToString(val) + "dB", diff + 3*(diff) - 50.0, (curHeight/4.0)-2.0);
+//    val = sensor2Value;
+//    ofDrawBitmapString("Sensor 2 :" + ofToString(val) + "dB", diff + 10*(diff) - 50.0, (curHeight/4.0)-2.0);
 
     ofEllipse(diff + 3*(diff), curHeight/2, 10, 10);
     ofEllipse(diff + 10*(diff), curHeight/2, 10, 10);
@@ -143,18 +188,43 @@ void ofApp::draw(){
     for (int i = 0; i < curWidth; i++) {
         ofSetColor(185.0);
         ofFill();
-        ofEllipse(i, curHeight/4.0 - gaussian[i], 2,2);
+        ofEllipse(i, curHeight/4.0 - ofMap(gaussian[i],0.0,255.0,0.0,180.0), 2,2);
     }
-
-
-    vector<ofPoint> pts;
-    for (int x = diff/2; x < curWidth + (diff/2); x+=diff) {
-        pts.push_back(ofPoint(x, ofMap(barBrightness[x/diff], 0.0, 255.0, 3.0*(curHeight/4.0 + 6.0)+40.0, curHeight)));
-    }
-    ofPolyline line(pts);
+    
     ofSetColor(color);
     ofFill();
+    
+    vector<ofPoint> pts;
+    
+    pts.push_back(ofPoint(diff + 3*(diff) - 40,ofGetHeight()));
+    pts.push_back(ofPoint(diff + 3*(diff), ofGetHeight()-pulseHeightLeft));
+    pts.push_back(ofPoint(diff + 3*(diff) + 40,ofGetHeight()));
+    ofPolyline line(pts);
     line.draw();
+    
+    if (pulseHeightLeft < 140.0 && pulseLeftGrowing) {
+        pulseHeightLeft = ofClamp(pulseHeightLeft*pulseGrowth, 0.0, 140.0);
+    } else {
+        //TODO(COLLIN):HACK, DO THIS INTELLIGENTLY
+        pulseHeightLeft = ofClamp(pulseHeightLeft*pulseDecay, 1.0, 140.0);
+        pulseLeftGrowing = false;
+    }
+    
+    
+    pts.clear();
+    pts.push_back(ofPoint(diff + 10*(diff) - 40,ofGetHeight()));
+    pts.push_back(ofPoint(diff + 10*(diff), ofGetHeight()-pulseHeightRight));
+    pts.push_back(ofPoint(diff + 10*(diff) + 40,ofGetHeight()));
+    ofPolyline line2(pts);
+    line2.draw();
+
+    if (pulseHeightRight < 140.0 && pulseRightGrowing) {
+        pulseHeightRight = ofClamp(pulseHeightRight*pulseGrowth, 0.0, 140.0);
+    } else {
+        //TODO(COLLIN):HACK, DO THIS INTELLIGENTLY
+        pulseHeightRight = ofClamp(pulseHeightRight*pulseDecay, 1.0, 140.0);
+        pulseRightGrowing = false;
+    }
     
     ofSetColor(185.0);
     ofFill();
@@ -188,13 +258,36 @@ void ofApp::draw(){
 }
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key){
+void ofApp::keyPressed(int key) {
+    
+    if (key == 107) {
+        int diff = 1024/numBars;
+        Wave wave;
+        wave.a = 1.1f;
+        wave.b = diff + 3*(diff);
+        wave.c = 100.0;
+        wave.bVel = 10.0;
+        wave.growing = true;
+        waves.push_back(wave);
+        pulseLeftGrowing = true;
+        
+    } else if (key == 108) {
+        int diff = 1024/numBars;
+        Wave wave;
+        wave.a = 1.1f;
+        wave.b = diff + 10*(diff);
+        wave.c = 100.0;
+        wave.bVel = 10.0;
+        wave.growing = true;
+        waves.push_back(wave);
+        pulseRightGrowing = true;
+
+    }
 
 }
 
 //--------------------------------------------------------------
 void ofApp::exit() {
-    
     if ( dmxInterface_ && dmxInterface_->isOpen() ) {
         // send all zeros (black) to every dmx channel and close!
         for ( int i = 0; i <= DMX_DATA_LENGTH; i++ ) dmxData_[i] = 0;
@@ -204,27 +297,27 @@ void ofApp::exit() {
 }
 
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key){
+void ofApp::keyReleased(int key) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
+void ofApp::mouseMoved(int x, int y ) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseDragged(int x, int y, int button) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
+void ofApp::mousePressed(int x, int y, int button) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
+void ofApp::mouseReleased(int x, int y, int button) {
 
 }
 
