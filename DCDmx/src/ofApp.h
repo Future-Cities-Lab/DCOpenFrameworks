@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxGenericDmx.h"
 #include "ofxGui.h"
+#include "ofxJSON.h"
 
 #define DMX_DATA_LENGTH 494
 
@@ -23,16 +24,19 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     private:
-        const unsigned int numBars = 16;
-        ofColor barColor;
-        unsigned int barBrightness[16];
-        float barHeights[16];
-        const unsigned int barWidth = 4;
-        float attractorXPos = 0.0;
+//        const unsigned int numBars = 16;
+//        ofColor barColor;
+        //unsigned int barBrightness[16];
+//        float barHeights[16];
+//        const unsigned int barWidth = 4;
+//        float attractorXPos = 0.0;
+//        unsigned int barBrightness[16];
+//        unsigned int barBrightness2[16];
+
     
-        float gaussianSensor1[1024];
-        float gaussianSensor2[1024];
-        float gaussian[1024];
+        float gaussianSensor1[1920];
+        float gaussianSensor2[1920];
+        float gaussian[1920];
     
         ofPolyline lineGraph;
     
@@ -61,7 +65,6 @@ class ofApp : public ofBaseApp{
         float pulseGrowth;
         float pulseDecay;
     
-    
         bool trainGrowing;
         float trainGrowthRate;
         float trainDecay;
@@ -72,8 +75,10 @@ class ofApp : public ofBaseApp{
             float b;
             float c;
             float bVel;
-            float curve[1024];
+            float curve[1920];
             bool growing;
         };
         vector<Wave> waves;
+        vector<Wave> waves2;
+        ofxJSONElement result;
 };
