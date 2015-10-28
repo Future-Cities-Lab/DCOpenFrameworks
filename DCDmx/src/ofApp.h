@@ -24,19 +24,10 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     private:
-//        const unsigned int numBars = 16;
-//        ofColor barColor;
-        //unsigned int barBrightness[16];
-//        float barHeights[16];
-//        const unsigned int barWidth = 4;
-//        float attractorXPos = 0.0;
-//        unsigned int barBrightness[16];
-//        unsigned int barBrightness2[16];
-
     
-        float gaussianSensor1[1920];
-        float gaussianSensor2[1920];
-        float gaussian[1920];
+        float gaussianSensor1[1440];
+        float gaussianSensor2[1440];
+        float gaussian[1440];
     
         ofPolyline lineGraph;
     
@@ -75,7 +66,7 @@ class ofApp : public ofBaseApp{
             float b;
             float c;
             float bVel;
-            float curve[1920];
+            float curve[1440];
             bool growing;
         };
         vector<Wave> waves;
