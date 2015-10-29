@@ -25,9 +25,9 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     private:
     
-        float gaussianSensor1[1440];
-        float gaussianSensor2[1440];
-        float gaussian[1440];
+        float gaussianSensor1[1280];
+        float gaussianSensor2[1280];
+        float gaussian[1280];
     
         ofPolyline lineGraph;
     
@@ -66,7 +66,7 @@ class ofApp : public ofBaseApp{
             float b;
             float c;
             float bVel;
-            float curve[1440];
+            float curve[1280];
             bool growing;
         };
         vector<Wave> waves;

@@ -33,7 +33,7 @@ void ofApp::setup() {
     gui.add(autoMode.setup("Automate", false));
     gui.add(color.setup("color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255), 20.0));
 
-    curWidth = 1440;
+    curWidth = 1280;
     curHeight = 900;
     
     decayRate = 0.99f;
@@ -94,7 +94,7 @@ void ofApp::setup() {
             }
         }
     }
-    maxZ*=(1440.0/1920.0);
+    maxZ*=(1280.0/1920.0);
     maxY*=(900.0/1080.0);
 }
 
@@ -133,7 +133,7 @@ void ofApp::update() {
     }
     
     for (int i = 0; i < waves.size(); i++) {
-        for (int x = 0; x < 1440; x++) {
+        for (int x = 0; x < 1280; x++) {
             float top = pow(x-waves[i].b,2);
             float bottom = 2*pow(waves[i].c,2);
             waves[i].curve[x] = waves[i].a*exp(-(top/bottom));
@@ -179,7 +179,7 @@ void ofApp::update() {
         }
     }
     
-    for (int x = 0; x < 1440; x++) {
+    for (int x = 0; x < 1280; x++) {
         float newVal = 0.0;
         for (int i = 0; i < waves.size(); i++) {
             newVal += waves[i].curve[x];
@@ -199,15 +199,15 @@ void ofApp::draw(){
     /* Sensor Points */
     ofSetColor(31.875);
     ofFill();
-    ofEllipse((1440.0/4.0), ((maxY+10)-(minY-10))/2, 10, 10);
-    ofEllipse(3*(1440.0/4.0), ((maxY+10)-(minY-10))/2, 10, 10);
-    ofEllipse((1440.0/4.0), ((maxY+10)-(minY-10)), 10, 10);
-    ofEllipse(3*(1440.0/4.0), ((maxY+10)-(minY-10)), 10, 10);
+    ofEllipse((1280.0/4.0), ((maxY+10)-(minY-10))/2, 10, 10);
+    ofEllipse(3*(1280.0/4.0), ((maxY+10)-(minY-10))/2, 10, 10);
+    ofEllipse((1280.0/4.0), ((maxY+10)-(minY-10)), 10, 10);
+    ofEllipse(3*(1280.0/4.0), ((maxY+10)-(minY-10)), 10, 10);
     
     ofSetColor(255.0);
     ofFill();
-    ofDrawBitmapString("K", (1440.0/4.0) - 4, (((maxY+10)-(minY-10))/2) + 16);
-    ofDrawBitmapString("L", 3*(1440.0/4.0) - 4, (((maxY+10)-(minY-10))/2) + 16);
+    ofDrawBitmapString("K", (1280.0/4.0) - 4, (((maxY+10)-(minY-10))/2) + 16);
+    ofDrawBitmapString("L", 3*(1280.0/4.0) - 4, (((maxY+10)-(minY-10))/2) + 16);
 
     /* Current Office location */
     //ofRect(diff + 8*(diff)-1, (curHeight/4.0), 3, 2.0*(curHeight/4.0));
@@ -275,17 +275,17 @@ void ofApp::draw(){
         ofSetColor(185.0);
         ofFill();
         string reg = "region" + ofToString(region);
-        ofDrawBitmapString(reg + " %:", 225, (((minY-10)/6)*region) + (minY-10)/12);
-        ofDrawBitmapString(reg + " Lux:", 225, (((minY-10)/6)*region) + (minY-10)/12 + 12.0);
+        ofDrawBitmapString(reg + " %:", 215, (((minY-10)/6)*region) + (minY-10)/12);
+        ofDrawBitmapString(reg + " Lux:", 215, (((minY-10)/6)*region) + (minY-10)/12 + 12.0);
         for (int rings = 0; rings < result[reg].size(); rings++) {
             ofSetColor(185.0);
             ofFill();
             string ring = "ring" + ofToString(rings);
-            float in = (1440.0/1920.0)*result[reg][ring]["point0"][0].asFloat();
+            float in = (1280.0/1920.0)*result[reg][ring]["point0"][0].asFloat();
             int inInt = (int) in;
             int gauss = gaussian[inInt];
-            ofDrawBitmapString(ofToString((int)gauss), 350 + 25*rings, (((minY-10)/6)*region) + (minY-10)/12);
-            ofDrawBitmapString(ofToString((int)gauss), 350 + 25*rings, (((minY-10)/6)*region) + (minY-10)/12 + 12.0);
+            ofDrawBitmapString(ofToString((int)ofMap(gauss, 0, 255.0, 0.0,100.0)), 310 + 27*rings, (((minY-10)/6)*region) + (minY-10)/12);
+            ofDrawBitmapString(ofToString((int)ofMap(gauss, 0, 255.0, 7.0, 51.0)), 310 + 27*rings, (((minY-10)/6)*region) + (minY-10)/12 + 12.0);
             ofPolyline line;
             ofColor c = color;
             c.setBrightness(gauss);
@@ -294,11 +294,11 @@ void ofApp::draw(){
             for (int pointPos = 0; pointPos < 3; pointPos++) {
                 string point = "point" + ofToString(pointPos);
                 if (result[reg][ring][point][0].asFloat() < 1920) {
-                    line.addVertex((1440.0/1920.0)*result[reg][ring][point][0].asFloat(), (900.0/1080.0)*(1080-result[reg][ring][point][1].asFloat()));
+                    line.addVertex((1280.0/1920.0)*result[reg][ring][point][0].asFloat(), (900.0/1080.0)*(1080-result[reg][ring][point][1].asFloat()));
                 }
             }
             if (result[reg][ring]["point0"][0].asFloat() < 1920) {
-                line.addVertex((1440.0/1920.0)*result[reg][ring]["point0"][0].asFloat(), (900.0/1080.0)*(1080-result[reg][ring]["point0"][1].asFloat()));
+                line.addVertex((1280.0/1920.0)*result[reg][ring]["point0"][0].asFloat(), (900.0/1080.0)*(1080-result[reg][ring]["point0"][1].asFloat()));
             }
             line.draw();
         }
@@ -314,14 +314,14 @@ void ofApp::keyPressed(int key) {
         float vel = ofRandom(7.0,30.0);
         Wave wave;
         wave.a = 1.1f;
-        wave.b = (1440.0/4.0);
+        wave.b = (1280.0/4.0);
         wave.c = 100.0;
         wave.bVel = vel;
         wave.growing = true;
         waves.push_back(wave);
         Wave wave2;
         wave2.a = 1.1f;
-        wave2.b = (1440.0/4.0);
+        wave2.b = (1280.0/4.0);
         wave2.c = 100.0;
         wave2.bVel = -vel;
         wave2.growing = true;
@@ -331,14 +331,14 @@ void ofApp::keyPressed(int key) {
         float vel = ofRandom(7.0,30.0);
         Wave wave;
         wave.a = 1.1f;
-        wave.b = 3.0*(1440.0/4.0);
+        wave.b = 3.0*(1280.0/4.0);
         wave.c = 100.0;
         wave.bVel = vel;
         wave.growing = true;
         waves.push_back(wave);
         Wave wave2;
         wave2.a = 1.1f;
-        wave2.b = 3.0*(1440.0/4.0);
+        wave2.b = 3.0*(1280.0/4.0);
         wave2.c = 100.0;
         wave2.bVel = -vel;
         wave2.growing = true;
