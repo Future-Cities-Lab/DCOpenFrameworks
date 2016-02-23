@@ -1,0 +1,11 @@
+ofxAssimpModelLoader
+ofxCsv
+ofxDmx
+ofxGenericDmx
+ofxGui
+ofxJSON
+ofxMailUtils
+ofxNetwork
+ofxOpenCv
+ofxOsc
+ofxThread
