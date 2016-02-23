@@ -509,11 +509,11 @@ void ofApp::draw() {
 
     dmxData_[0] = 0;
     
-//    if ( ! dmxInterface_ || ! dmxInterface_->isOpen() ) {
-//        printf( "Not updating, enttec device is not open.\n");
-//    } else{
-//        dmxInterface_->writeDmx( dmxData_, DMX_DATA_LENGTH );
-//    }
+    if ( ! dmxInterface_ || ! dmxInterface_->isOpen() ) {
+        printf( "Not updating, enttec device is not open.\n");
+    } else{
+        dmxInterface_->writeDmx( dmxData_, DMX_DATA_LENGTH );
+    }
     
     for (int region = 0; region < 6; region++) {
         ofSetColor(185.0);
