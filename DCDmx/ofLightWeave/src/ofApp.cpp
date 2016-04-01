@@ -78,7 +78,7 @@ void ofApp::setup(){
         }
     }
     
-    vidGrabber.setDeviceID(1);
+    vidGrabber.setDeviceID(0);
     vidGrabber.setDesiredFrameRate(60);
     vidGrabber.initGrabber(camWidth, camHeight);
     colorImg.allocate(320,240);
