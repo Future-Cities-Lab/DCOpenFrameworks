@@ -242,7 +242,6 @@ void ofApp::draw() {
         case ACTIVATED: {
             //newDrawRegion(gaussian, 0, 3, false);
             newDrawRegion(gaussianBottom, 3, 6, false);
-            sendToDMX();
             ofSetColor(255);
             ofFill();
             ofDrawRectangle(swarmPosition.x, swarmPosition.y, 10, 50);
@@ -262,6 +261,8 @@ void ofApp::draw() {
             break;
         }
     }
+    sendToDMX();
+
     // draw the incoming, the grayscale, the bg and the thresholded difference
     ofSetHexColor(0xffffff);
 //    colorImg.draw(20,20);
