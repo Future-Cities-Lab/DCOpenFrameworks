@@ -125,7 +125,7 @@ void ofApp::update() {
             }
             
             for (int i = 0; i < 12; i++) {
-                if (i != 1) {
+                if (i != 7) {
                     micNoiseBottom[i] += 0.001;
                     micLevelsBottom[i] = ofMap(ofNoise(micNoiseBottom[i], 1.0), 0.0, 1.0, -3.0, 1.0);
                 }
@@ -149,7 +149,7 @@ void ofApp::update() {
             
             //bottomSwarm.b += bottomSwarm.bVel;
             ofVec2f norm = swarmPosition;
-            bottomSwarm.b = norm.normalize().x*1280 + 160;
+            bottomSwarm.b = norm.normalize().x*1280-160;
             
 //            if (bottomSwarm.b >= ofGetWidth() || bottomSwarm.b <= 0) {
 //                bottomSwarm.bVel*=-1.0;
@@ -183,7 +183,7 @@ void ofApp::update() {
             }
             
             ofVec2f norm = swarmPosition;
-            bottomSwarm.b = norm.normalize().x*1280.0;
+            bottomSwarm.b = norm.normalize().x*1280.0-160;
             
             for (int x = 0; x < 1280; x++) {
                 gaussianBottom[x] = ofMap(bottomSwarm.curve[x], 0.0, 1.1, ambientLevel, 255.0);
@@ -224,9 +224,9 @@ void ofApp::draw() {
 
     ofSetColor(255.0,255.0,255.0);
     ofFill();
-    ofDrawLine(360, 294, 360, 333);
-    ofDrawLine(390, 294, 390, 333);
-    ofDrawBitmapString("Office", 350, 294);
+    ofDrawLine(752, 586, 752, 616);
+    ofDrawLine(782, 586, 782, 616);
+    ofDrawBitmapString("Office", 742, 586);
     
     ofSetColor(255);
     ofNoFill();
@@ -279,7 +279,7 @@ void ofApp::draw() {
     
     // we could draw the whole contour finder
     contourFinder.draw(360,0);
-    micLevelsBottom[1] = contourFinder.nBlobs;
+    micLevelsBottom[7] = contourFinder.nBlobs;
     for (int i = 0; i < contourFinder.nBlobs; i++){
         contourFinder.blobs[i].draw(360, 0);
     }
@@ -472,18 +472,6 @@ void ofApp::newDrawRegion(float gaussLevels[1280], int start, int end, bool isEv
                 c.r = ofMap(gauss, 51.0, 255.0, top_r, 255.0);
                 c.g = ofMap(gauss, 51.0, 255.0, top_g, 0.0);
                 c.b = ofMap(gauss, 51.0, 255.0, top_b, 0.0);
-                
-
-//                if (reg == "region4" && ring == "ring0" && point == "point0") {
-//                    cout << reg << endl;
-//                    cout << ring << endl;
-//                    cout << point << endl;
-//                    
-//                    cout << ofMap(gauss, 51.0, 255.0, top_r, 255.0) << endl;
-//                    cout << ofMap(gauss, 51.0, 255.0, top_g, 0.0) << endl;
-//                    cout << ofMap(gauss, 51.0, 255.0, top_b, 0.0) << endl;
-//                    cout << "" << endl;
-//                }
                 
                 ofSetColor(c);
                 ofFill();
