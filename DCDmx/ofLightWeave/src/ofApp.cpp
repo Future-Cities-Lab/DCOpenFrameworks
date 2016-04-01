@@ -394,17 +394,17 @@ void ofApp::sendToDMX() {
 //    cout << "" << endl;
 
 
-    c2.r = ofMap(gaussianBottom[result["region4"]["ring1"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
-    c2.g = ofMap(gaussianBottom[result["region4"]["ring1"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
-    c2.b = ofMap(gaussianBottom[result["region4"]["ring1"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
+    c2.r = ofMap(gaussianBottom[result["region4"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
+    c2.g = ofMap(gaussianBottom[result["region4"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
+    c2.b = ofMap(gaussianBottom[result["region4"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
 
-    c3.r = ofMap(gaussianBottom[result["region4"]["ring2"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
-    c3.g = ofMap(gaussianBottom[result["region4"]["ring2"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
-    c3.b = ofMap(gaussianBottom[result["region4"]["ring2"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
+    c3.r = ofMap(gaussianBottom[result["region4"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
+    c3.g = ofMap(gaussianBottom[result["region4"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
+    c3.b = ofMap(gaussianBottom[result["region4"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
 
-    c4.r = ofMap(gaussianBottom[result["region4"]["ring3"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
-    c4.g = ofMap(gaussianBottom[result["region4"]["ring3"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
-    c4.b = ofMap(gaussianBottom[result["region4"]["ring3"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
+    c4.r = ofMap(gaussianBottom[result["region4"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
+    c4.g = ofMap(gaussianBottom[result["region4"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
+    c4.b = ofMap(gaussianBottom[result["region4"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
     
 
 
