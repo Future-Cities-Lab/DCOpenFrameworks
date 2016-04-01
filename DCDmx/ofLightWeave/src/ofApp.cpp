@@ -381,10 +381,18 @@ void ofApp::sendToDMX() {
 //    float top_r_4 = ofMap(result["region0"]["ring3"]["point0"][0].asFloat(), 0.0, 1280.0, curLeft.r, curRight.r);
 //    float top_g_4 = ofMap(result["region0"]["ring3"]["point0"][0].asFloat(), 0.0, 1280.0, curLeft.g, curRight.g);
 //    float top_b_4 = ofMap(result["region0"]["ring3"]["point0"][0].asFloat(), 0.0, 1280.0, curLeft.b, curRight.b);
+    
+    //cout << gaussianBottom[result["region4"]["ring0"]["point0"][0].asInt()] << endl;
 
     c1.r = ofMap(gaussianBottom[result["region4"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
     c1.g = ofMap(gaussianBottom[result["region4"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
     c1.b = ofMap(gaussianBottom[result["region4"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
+    
+//    cout << ofMap(gaussianBottom[result["region4"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0) << endl;
+//    cout << ofMap(gaussianBottom[result["region4"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0) << endl;
+//    cout << ofMap(gaussianBottom[result["region4"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0) << endl;
+//    cout << "" << endl;
+
 
     c2.r = ofMap(gaussianBottom[result["region4"]["ring1"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
     c2.g = ofMap(gaussianBottom[result["region4"]["ring1"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
@@ -399,10 +407,6 @@ void ofApp::sendToDMX() {
     c4.b = ofMap(gaussianBottom[result["region4"]["ring3"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
     
 
-    
-//    c.r = ofMap(gauss, 51.0, 255.0, top_r, 255.0);
-//    c.g = ofMap(gauss, 51.0, 255.0, top_g, 0.0);
-//    c.b = ofMap(gauss, 51.0, 255.0, top_b, 0.0);
 
     dmxData_[1] = int(c1.r);
     dmxData_[2] = int(c1.g);
@@ -467,6 +471,18 @@ void ofApp::newDrawRegion(float gaussLevels[1280], int start, int end, bool isEv
                 c.r = ofMap(gauss, 51.0, 255.0, top_r, 255.0);
                 c.g = ofMap(gauss, 51.0, 255.0, top_g, 0.0);
                 c.b = ofMap(gauss, 51.0, 255.0, top_b, 0.0);
+                
+
+//                if (reg == "region4" && ring == "ring0" && point == "point0") {
+//                    cout << reg << endl;
+//                    cout << ring << endl;
+//                    cout << point << endl;
+//                    
+//                    cout << ofMap(gauss, 51.0, 255.0, top_r, 255.0) << endl;
+//                    cout << ofMap(gauss, 51.0, 255.0, top_g, 0.0) << endl;
+//                    cout << ofMap(gauss, 51.0, 255.0, top_b, 0.0) << endl;
+//                    cout << "" << endl;
+//                }
                 
                 ofSetColor(c);
                 ofFill();
