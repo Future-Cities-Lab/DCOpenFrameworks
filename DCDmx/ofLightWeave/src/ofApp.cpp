@@ -160,7 +160,7 @@ void ofApp::update() {
             ofVec2f btm = absColumnPositionsBottom[max_pos];
             ofVec2f desired =  btm - swarmPosition;
             desired.normalize();
-            desired *= 1.0;
+            desired *= 4.0;
             swarmPosition += desired;
             
             /* UPDATE WAVES */
@@ -585,10 +585,16 @@ void ofApp::keyPressed(int key) {
     if (key == 'a') {
         
         ANIMATION_STATE = ACTIVATED;
+        bottomSwarm.bVel = 4.0;
+        swarmVector.x = 14.0;
+
 //        waves2.clear();
 //        waves.clear();
     } else if (key == 'd') {
         ANIMATION_STATE = DEACTIVATED;
+        bottomSwarm.bVel = 1.0;
+        swarmVector.x = 1.0;
+
 //        waves2.clear();
 //        waves.clear();
     } else if (key == 'e') {
