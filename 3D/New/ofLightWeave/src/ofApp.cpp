@@ -290,8 +290,17 @@ void ofApp::draw() {
     
     int cnt = 0;
     for (int i = 300; i <= 300+700; i+=70) {
-        ofDrawCircle(i, 45, 3);
-        ofDrawBitmapString((int)micLevelsTop[cnt], i, 60);
+        if (cnt == 4) {
+            ofSetColor(255.0, 0.0, 255.0);
+            ofFill();
+            ofDrawCircle(i, 45, 3);
+            ofDrawBitmapString((int)micLevelsTop[cnt], i, 60);
+            ofSetColor(255.0, 255.0, 255.0);
+            ofFill();
+        } else {
+            ofDrawCircle(i, 45, 3);
+            ofDrawBitmapString((int)micLevelsTop[cnt], i, 60);
+        }
         cnt++;
     }
     
@@ -312,6 +321,7 @@ void ofApp::draw() {
     }
     ofSetColor(100.0);
     ofFill();
+    int ct = 0;
     for (int region = 0; region < 3; region++) {
         string reg = "region" + ofToString(region);
         for (int pointPos = 0; pointPos < 4; pointPos++) {
@@ -320,7 +330,16 @@ void ofApp::draw() {
             cyl.setPosition(columnGeometry[reg][point][0].asFloat(), columnGeometry[reg][point][1].asFloat(), columnGeometry[reg][point][2].asFloat()-90);
             cyl.set(2.0, 130.0);
             cyl.rotate(90, ofVec3f(1.0, 0.0, 0.0));
-            cyl.draw();
+            if (ct == 4) {
+                ofSetColor(255.0, 0.0, 255.0);
+                ofFill();
+                cyl.draw();
+                ofSetColor(100.0);
+                ofFill();
+            } else {
+                cyl.draw();
+            }
+            ct++;
         }
     }
     for (int face = 0; face < 5; face++) {
@@ -352,6 +371,17 @@ void ofApp::draw() {
     sendToDMX();
     ofSetHexColor(0x333333);
     ofFill();
+    ofSetColor(255.0,255.0,255.0);
+    ofFill();
+    ofDrawBitmapString("W = Move Forwards, S = Move Backwards", 10, 100);
+    ofDrawBitmapString("Up Arrow = Move Upwards, Down Arrow = Move Downwards", 10, 120);
+    ofDrawBitmapString("Left Arrow = Move Left, Right Arrow = Move Right", 10, 140);
+    ofDrawBitmapString("Press A to Activate", 10, 160);
+    ofDrawBitmapString("Press D to Deactivate", 10, 180);
+    ofDrawBitmapString("Magenta Column/Dot is Office Column/Dot", 10, 200);
+    ofDrawBitmapString("Left Arrow = Move Left, Right Arrow = Move Right", 10, 140);
+    ofDrawBitmapString("Number of People/Column", 1010, 60);
+
 
 //    for (int i = 0; i < videoGrabbers.size(); i++) {
 //        videoGrabbers[i].draw(360*i, 0);
@@ -413,8 +443,6 @@ void ofApp::sendToDMX() {
     
     float inRes = result["region1"]["ring0"]["point0"][0].asFloat();
     float in = ofMap(inRes, -2000.0, -40.0, 0.0, 1280.0);
-    
-    //cout << "In = " << in << endl;
     int inInt = (int) in;
     int gauss = gaussianBottom[inInt];
     
@@ -436,7 +464,6 @@ void ofApp::sendToDMX() {
     ofVec2f btm = absColumnPositionTop[max_pos];
     ofVec2f desired =  btm - swarmPosition;
     float d = sqrt((desired.x*desired.x) + (desired.y+desired.y));
-    //cout << "d = " << d << endl;
     
     float r = ofMap(ofClamp(d, 0.0, 700.0), 0.0, 700.0, 25.0, 76.5);
     
@@ -523,11 +550,9 @@ void ofApp::newDrawRegion(float gaussLevels[1280], int start, int end, bool isEv
             float inRes = result[reg][ring]["point0"][0].asFloat();
             float in = ofMap(inRes, -2000.0, -40.0, 0.0, 1280.0);
             
-            //cout << "In = " << in << endl;
             int inInt = (int) in;
             int gauss = gaussLevels[inInt];
-            //cout << "Gauss = " << gauss << endl;
-            // Set Color
+
             ofColor c;
 
             float top_r = ofMap(backgroundLevel, 0.0, 255.0, bRed, 255.0);
