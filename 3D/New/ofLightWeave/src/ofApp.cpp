@@ -411,46 +411,97 @@ void ofApp::draw() {
 
 void ofApp::sendToDMX() {
     
-    ofColor c1;
-    ofColor c2;
-    ofColor c3;
-    ofColor c4;
+    float inRes = result["region1"]["ring0"]["point0"][0].asFloat();
+    float in = ofMap(inRes, -2000.0, -40.0, 0.0, 1280.0);
+    
+    //cout << "In = " << in << endl;
+    int inInt = (int) in;
+    int gauss = gaussianBottom[inInt];
+    
+    ofColor c;
     
     float top_r = ofMap(backgroundLevel, 0.0, 255.0, bRed, 255.0);
     float top_g = ofMap(backgroundLevel, 0.0, 255.0, bGreen, 255.0);
     float top_b = ofMap(backgroundLevel, 0.0, 255.0, bBlue, 255.0);
-
-    c1.r = ofMap(gaussianBottom[result["region1"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
-    c1.g = ofMap(gaussianBottom[result["region1"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
-    c1.b = ofMap(gaussianBottom[result["region1"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
-
-    c2.r = ofMap(gaussianBottom[result["region1"]["ring1"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
-    c2.g = ofMap(gaussianBottom[result["region1"]["ring1"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
-    c2.b = ofMap(gaussianBottom[result["region1"]["ring1"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
-
-    c3.r = ofMap(gaussianBottom[result["region1"]["ring2"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
-    c3.g = ofMap(gaussianBottom[result["region1"]["ring2"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
-    c3.b = ofMap(gaussianBottom[result["region1"]["ring2"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
-
-    c4.r = ofMap(gaussianBottom[result["region1"]["ring3"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
-    c4.g = ofMap(gaussianBottom[result["region1"]["ring3"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
-    c4.b = ofMap(gaussianBottom[result["region1"]["ring3"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
     
-    dmxData_[1] = int(c1.r);
-    dmxData_[2] = int(c1.g);
-    dmxData_[3] = int(c1.b);
+    int max_pos = 0;
+    int max_element = -1000;
+    for (int i = 0; i < 11; i++) {
+        if (micLevelsTop[i] > max_element) {
+            max_pos = i;
+            max_element = micLevelsTop[i];
+        }
+    }
+    
+    ofVec2f btm = absColumnPositionTop[max_pos];
+    ofVec2f desired =  btm - swarmPosition;
+    float d = sqrt((desired.x*desired.x) + (desired.y+desired.y));
+    //cout << "d = " << d << endl;
+    
+    float r = ofMap(ofClamp(d, 0.0, 700.0), 0.0, 700.0, 25.0, 76.5);
+    
+    ofColor bleh = ofColor::fromHsb(r, 255, 255);
+    
+    c.r = ofMap(gauss, 51.0, 255.0, top_r, bleh.r);
+    c.g = ofMap(gauss, 51.0, 255.0, top_g, bleh.g);
+    c.b = ofMap(gauss, 51.0, 255.0, top_b, bleh.b);
+    
+    dmxData_[1] = int(c.r);
+    dmxData_[2] = int(c.g);
+    dmxData_[3] = int(c.b);
 
-    dmxData_[4] = int(c2.r);
-    dmxData_[5] = int(c2.g);
-    dmxData_[6] = int(c2.b);
+    dmxData_[4] = int(c.r);
+    dmxData_[5] = int(c.g);
+    dmxData_[6] = int(c.b);
 
-    dmxData_[7] = int(c3.r);
-    dmxData_[8] = int(c3.g);
-    dmxData_[9] = int(c3.b);
+    dmxData_[7] = int(c.r);
+    dmxData_[8] = int(c.g);
+    dmxData_[9] = int(c.b);
 
-    dmxData_[10] = int(c4.r);
-    dmxData_[11] = int(c4.g);
-    dmxData_[12] = int(c4.b);
+    dmxData_[10] = int(c.r);
+    dmxData_[11] = int(c.g);
+    dmxData_[12] = int(c.b);
+    
+//    ofColor c1;
+//    ofColor c2;
+//    ofColor c3;
+//    ofColor c4;
+//    
+//    float top_r = ofMap(backgroundLevel, 0.0, 255.0, bRed, 255.0);
+//    float top_g = ofMap(backgroundLevel, 0.0, 255.0, bGreen, 255.0);
+//    float top_b = ofMap(backgroundLevel, 0.0, 255.0, bBlue, 255.0);
+//
+//    c1.r = ofMap(gaussianBottom[result["region1"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
+//    c1.g = ofMap(gaussianBottom[result["region1"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
+//    c1.b = ofMap(gaussianBottom[result["region1"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
+//
+//    c2.r = ofMap(gaussianBottom[result["region1"]["ring1"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
+//    c2.g = ofMap(gaussianBottom[result["region1"]["ring1"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
+//    c2.b = ofMap(gaussianBottom[result["region1"]["ring1"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
+//
+//    c3.r = ofMap(gaussianBottom[result["region1"]["ring2"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
+//    c3.g = ofMap(gaussianBottom[result["region1"]["ring2"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
+//    c3.b = ofMap(gaussianBottom[result["region1"]["ring2"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
+//
+//    c4.r = ofMap(gaussianBottom[result["region1"]["ring3"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
+//    c4.g = ofMap(gaussianBottom[result["region1"]["ring3"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
+//    c4.b = ofMap(gaussianBottom[result["region1"]["ring3"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
+//    
+//    dmxData_[1] = int(c1.r);
+//    dmxData_[2] = int(c1.g);
+//    dmxData_[3] = int(c1.b);
+//
+//    dmxData_[4] = int(c2.r);
+//    dmxData_[5] = int(c2.g);
+//    dmxData_[6] = int(c2.b);
+//
+//    dmxData_[7] = int(c3.r);
+//    dmxData_[8] = int(c3.g);
+//    dmxData_[9] = int(c3.b);
+//
+//    dmxData_[10] = int(c4.r);
+//    dmxData_[11] = int(c4.g);
+//    dmxData_[12] = int(c4.b);
 
     dmxData_[0] = 0;
 
