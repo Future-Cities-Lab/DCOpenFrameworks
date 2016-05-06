@@ -5,12 +5,7 @@
 #include "ofxJSON.h"
 #include "ofxAssimpModelLoader.h"
 #include "ofxNetwork.h"
-#include "ofxThread.h"
-#include "ofxMailUtils.h"
-#include "ofArduino.h"
 #include "ofxOpenCv.h"
-#include "IPVideoGrabber.h"
-#include "ofxFlyCamera.hpp"
 
 
 #define DMX_DATA_LENGTH 494
@@ -75,7 +70,12 @@ class ofApp : public ofBaseApp{
         ofxUDPManager udpConnectionBroadcast;
         ofxUDPManager moduleConnections[3];
         int eventPosition;
+    
         float micLevelsTop[11];
+//        float micLevelsTop[12];
+//        float micPositionsTop[12];
+
+
 
     
         ofVec2f absColumnPositionTop[11] = {
@@ -92,6 +92,17 @@ class ofApp : public ofBaseApp{
             ofVec2f(1000, 720)};
     
         float gaussianBottom[1280] = {0.0};
+    
+    
+        string verbalInstructions[8] = {"'W' = Move Forwards, 'S' = Move Backwards",
+                                    "Up Arrow = Move Upwards, Down Arrow = Move Downwards",
+                                    "Left Arrow = Move Left, Right Arrow = Move Right",
+                                    "Press 'A' to toggle algorithm On",
+                                    "Press 'D' to toggle algorithm Off",
+                                    "Magenta Column/Dot is Office Column/Dot",
+                                    "Number of People/Column",
+                                    "Spacebar to reset camera"};
+    
     
         ofColor eventColor = ofColor(255.0,255.0,255.0);
         ofPolyline lineGraph;
@@ -132,7 +143,11 @@ class ofApp : public ofBaseApp{
         ofColor lightColor;
         float colorHue;
         ofColor materialColor;
+        float colorHue2;
+        ofColor materialColor2;
         ofMaterial material;
+    
+        bool cameraInfoIsOn = false;
     
     
         ofxJSONElement result;
@@ -141,9 +156,6 @@ class ofApp : public ofBaseApp{
         ofImage backgroundImage;
         void sendToDMX();
         void newDrawRegion(float gaussLevels[1280], int start, int end, bool isEvent);
-        void drawCars();
-        void drawSounds();
-        void checkMics();
     
         void setupUDP();
 };

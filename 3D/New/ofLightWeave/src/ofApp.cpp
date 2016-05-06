@@ -42,8 +42,6 @@ void ofApp::setup(){
     bool parsingSuccessfulFaces = faceGeometry.open(facesFile);
 
     
-    //ofArduino.connect();
-    
     for (int region = 0; region < 6; region++) {
         string blah = "region" + ofToString(region);
         for (int rings = 0; rings < result[blah].size(); rings++) {
@@ -53,7 +51,6 @@ void ofApp::setup(){
             }
         }
     }
-    
     
     backgroundImage.loadImage("unnamed.jpg");
     
@@ -117,12 +114,19 @@ void ofApp::setup(){
     material.setShininess( 64 );
     
     colorHue = ofRandom(0, 250);
+    colorHue2 = ofRandom(0, 250);
+
     
     lightColor.setBrightness( 180.f );
     lightColor.setSaturation( 150.f );
     
     materialColor.setBrightness(250.f);
     materialColor.setSaturation(200);
+    
+    lightColor.setHue(colorHue);
+    pointLight.setDiffuseColor(lightColor);
+    materialColor.setHue(colorHue);
+    material.setSpecularColor(materialColor);
 }
 
 void ofApp::update() {
@@ -228,45 +232,16 @@ void ofApp::update() {
                 }
             }
             cntN++;
-
         }
     }
     
-    /* LIGHTING */
-//    colorHue += .1f;
-//    if (colorHue >= 255) {
-//        colorHue = 0.f;
-//    }
-    lightColor.setHue(colorHue);
-    pointLight.setDiffuseColor(lightColor);
-    materialColor.setHue(colorHue);
-    material.setSpecularColor(materialColor);
+
 }
 
 //--------------------------------------------------------------
 
 void ofApp::draw() {
     ofBackground(0.0, 0.0, 0.0);
-    
-    ofSetColor(255.0, 255.0, 255.0);
-    ofFill();
-
-    
-    int cnt = 0;
-    for (int i = 300; i <= 300+700; i+=70) {
-        if (cnt == 4) {
-            ofSetColor(255.0, 0.0, 255.0);
-            ofFill();
-            ofDrawCircle(i, 45, 3);
-            ofDrawBitmapString((int)micLevelsTop[cnt], i, 60);
-            ofSetColor(255.0, 255.0, 255.0);
-            ofFill();
-        } else {
-            ofDrawCircle(i, 45, 3);
-            ofDrawBitmapString((int)micLevelsTop[cnt], i, 60);
-        }
-        cnt++;
-    }
     
     ofEnableLighting();
     pointLight.enable();
@@ -294,6 +269,8 @@ void ofApp::draw() {
     for (int region = 0; region < 3; region++) {
         string reg = "region" + ofToString(region);
         for (int pointPos = 0; pointPos < 4; pointPos++) {
+            lightColor.setHue(colorHue);
+            pointLight.setDiffuseColor(lightColor);
             if (region == 1 && pointPos == 3) {
                 
             } else {
@@ -303,8 +280,12 @@ void ofApp::draw() {
                 cyl.set(2.0, 130.0);
                 cyl.rotate(90, ofVec3f(1.0, 0.0, 0.0));
                 if (ct == 4) {
-                    ofSetColor(255.0, 0.0, 255.0);
-                    ofFill();
+//                    ofSetColor(255.0, 0.0, 255.0);
+//                    ofFill();
+                    lightColor.setHue(colorHue2);
+                    pointLight.setDiffuseColor(lightColor);
+                    cyl.set(8.0, 130.0);
+
                     cyl.draw();
                     ofSetColor(100.0);
                     ofFill();
@@ -325,25 +306,6 @@ void ofApp::draw() {
     ofFill();
     for (int face = 0; face < 5; face++) {
         string fac = "face" + ofToString(face);
-//        ofMesh mesh;
-//        
-//        mesh.setMode(OF_PRIMITIVE_TRIANGLES);
-//        mesh.addVertex(ofPoint(faceGeometry[fac]["point0"][0].asFloat(),faceGeometry[fac]["point0"][1].asFloat(),faceGeometry[fac]["point0"][2].asFloat()));
-//        mesh.addVertex(ofPoint(faceGeometry[fac]["point1"][0].asFloat(),faceGeometry[fac]["point1"][1].asFloat(),faceGeometry[fac]["point1"][2].asFloat()));
-//        mesh.addVertex(ofPoint(faceGeometry[fac]["point2"][0].asFloat(),faceGeometry[fac]["point2"][1].asFloat(),faceGeometry[fac]["point2"][2].asFloat()));
-//        mesh.addVertex(ofPoint(faceGeometry[fac]["point3"][0].asFloat(),faceGeometry[fac]["point3"][1].asFloat(),faceGeometry[fac]["point3"][2].asFloat()));
-//        mesh.addColor(ofColor(155.0, 155.0, 155.0));
-//        mesh.addColor(ofColor(155.0, 155.0, 155.0));
-//        mesh.addColor(ofColor(155.0, 155.0, 155.0));
-//        mesh.addColor(ofColor(155.0, 155.0, 155.0));
-//
-//        mesh.addIndex(0); //connect the first vertex we made, v0
-//        mesh.addIndex(1); //to v1
-//        mesh.addIndex(2); //to v2 to complete the face
-//        mesh.addIndex(2); //now start a new face beginning with v1
-//        mesh.addIndex(3); //that is connected to v2
-//        mesh.addIndex(0); //and we complete the face with v3
-//        mesh.drawWireframe();
         ofPoint p1;
         ofPoint p2;
         ofPoint p3;
@@ -352,44 +314,55 @@ void ofApp::draw() {
         p2.set(ofVec3f(faceGeometry[fac]["point1"][0].asFloat(),faceGeometry[fac]["point1"][1].asFloat(),faceGeometry[fac]["point1"][2].asFloat()));
         p3.set(ofVec3f(faceGeometry[fac]["point2"][0].asFloat(),faceGeometry[fac]["point2"][1].asFloat(),faceGeometry[fac]["point2"][2].asFloat()));
         p4.set(ofVec3f(faceGeometry[fac]["point3"][0].asFloat(),faceGeometry[fac]["point3"][1].asFloat(),faceGeometry[fac]["point3"][2].asFloat()));
-        
         ofDrawLine(p1, p2);
         ofDrawLine(p2, p3);
         ofDrawLine(p3, p4);
         ofDrawLine(p4, p1);
-
-        
     }
     cam.end();
     ofPopMatrix();
 
-
-    ofSetColor(255);
-    ofFill();
-    ofDrawRectangle(swarmPosition.x, 45, 10, 50);
     sendToDMX();
-    ofSetHexColor(0x333333);
-    ofFill();
+
     ofSetColor(255.0,255.0,255.0);
     ofFill();
-    ofDrawBitmapString("W = Move Forwards, S = Move Backwards", 10, 100);
-    ofDrawBitmapString("Up Arrow = Move Upwards, Down Arrow = Move Downwards", 10, 120);
-    ofDrawBitmapString("Left Arrow = Move Left, Right Arrow = Move Right", 10, 140);
-    ofDrawBitmapString("Press A to Activate", 10, 160);
-    ofDrawBitmapString("Press D to Deactivate", 10, 180);
-    ofDrawBitmapString("Magenta Column/Dot is Office Column/Dot", 10, 200);
-    ofDrawBitmapString("Number of People/Column", 1010, 60);
-    ofDrawBitmapString("Spacebar to reset camera", 10, 220);
-
-
-    //ofDrawRectangle(660, 360, 320, 240);
-    for (int j = 0; j < contourFinder.nBlobs; j++){
-        contourFinder.blobs[j].draw(660, 360);
+    for (int i = 0; i < 8; i++) {
+        ofDrawBitmapString(verbalInstructions[i], 10, (i*10)+700);
     }
+    ofDrawBitmapString("Press 'I' for camera information", 10, 800);
+
+    if (cameraInfoIsOn) {
+        ofSetColor(255.0, 255.0, 255.0);
+        ofFill();
+        int cnt = 0;
+        for (int i = 300; i <= 300+700; i+=70) {
+            if (cnt == 4) {
+                ofSetColor(255.0, 0.0, 255.0);
+                ofFill();
+                ofDrawCircle(i, 45, 3);
+                ofDrawBitmapString((int)micLevelsTop[cnt], i, 60);
+                ofSetColor(255.0, 255.0, 255.0);
+                ofFill();
+            } else {
+                ofDrawCircle(i, 45, 3);
+                ofDrawBitmapString((int)micLevelsTop[cnt], i, 60);
+            }
+            cnt++;
+        }
+
+        ofDrawRectangle(swarmPosition.x, 45, 10, 50);
+        
+        ofNoFill();
+        ofDrawRectangle(560, 150, 340, 240);
+        for (int j = 0; j < contourFinder.nBlobs; j++){
+            contourFinder.blobs[j].draw(560, 150);
+        }
+        ofSetColor(255.0,255.0,255.0);
+        ofDrawRectangle(560-340, 150, 340, 240);
+        ofDrawRectangle(560+340, 150, 340, 240);
+    }
+
     micLevelsTop[4] = contourFinder.nBlobs;
-    //ofDrawRectangle(660, 360, 320, 240);
-//    ofSetHexColor(0xffffff);
-//    ofFill();
 
 }
 
@@ -487,7 +460,6 @@ void ofApp::newDrawRegion(float gaussLevels[1280], int start, int end, bool isEv
             ofVec2f btm = absColumnPositionTop[max_pos];
             ofVec2f desired =  btm - swarmPosition;
             float d = sqrt((desired.x*desired.x) + (desired.y+desired.y));
-            //cout << "d = " << d << endl;
 
             float r = ofMap(ofClamp(d, 0.0, 700.0), 0.0, 700.0, 25.0, 76.5);
 
@@ -512,21 +484,6 @@ void ofApp::newDrawRegion(float gaussLevels[1280], int start, int end, bool isEv
     }
 }
 
-void ofApp::checkMics() {
-    std::string nextMessage = "&&&";
-    for (int i = 0; i < 3; i++) {
-        moduleConnections[i].Send(nextMessage.c_str(), nextMessage.size());
-        ofSleepMillis(100);
-        char udpMessage[1000];
-        auto ret = udpConnectionBroadcast.Receive(udpMessage, 1000);
-        while (udpMessage[0] != '\0') {
-            //int msg = udpMessage[0];
-            cout << (int) udpMessage[0] << endl;
-            std::fill_n(udpMessage, 1000, 0);
-            auto ret = udpConnectionBroadcast.Receive(udpMessage, 1000);
-        }
-    }
-}
 
 void ofApp::setupUDP() {
     udpConnectionBroadcast.Create();
@@ -596,7 +553,12 @@ void ofApp::keyPressed(int key) {
         cam.setPosition(cam.getX() + 10.0, cam.getY(), cam.getZ());
     } else if (key == 's') {
         cam.setPosition(cam.getX() - 10.0, cam.getY(), cam.getZ());
-
+    } else if (key == 'i') {
+        if (cameraInfoIsOn) {
+            cameraInfoIsOn = false;
+        } else {
+            cameraInfoIsOn = true;
+        }
     }
 }
 
@@ -606,8 +568,6 @@ void ofApp::exit() {
 //        dmxInterface_->writeDmx( dmxData_, DMX_DATA_LENGTH );
 //        dmxInterface_->close();
 //    }
-//    ofSoundStreamStop();
-//    ofSoundStreamClose();
 }
 
 //--------------------------------------------------------------
