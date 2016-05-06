@@ -43,18 +43,16 @@ class ofApp : public ofBaseApp{
     
 
     private:
-      ofCamera cam;
-//      ofxFlyCamera flyCam;
-//      ofEasyCam cam; // add mouse controls for camera movement
-    
+        ofCamera cam;
+
         /* VISION CODE */
-        //bool bLearnBackground;
+        bool bLearnBackground;
         int 				threshold;
 
         ofVideoGrabber vidGrabber;
         ofxCvColorImage colorImg;
         ofxCvGrayscaleImage grayImage, grayBg, grayDiff;
-        //ofxCvContourFinder contourFinder;
+        ofxCvContourFinder contourFinder;
     
         /* SWARM CODE */
         float bRed = 135.0;
@@ -66,8 +64,6 @@ class ofApp : public ofBaseApp{
         ofVec2f swarmPosition = ofVec2f(310, 45);
         ofVec2f swarmVector = ofVec2f(1.0, 0.0);
 
-        ofPixels videoInverted;
-        ofTexture videoTexture;
         int camWidth;
         int camHeight;
 
@@ -131,6 +127,13 @@ class ofApp : public ofBaseApp{
         };
     
         Swarm bottomSwarm;
+
+        ofLight pointLight;
+        ofColor lightColor;
+        float colorHue;
+        ofColor materialColor;
+        ofMaterial material;
+    
     
         ofxJSONElement result;
         ofxJSONElement columnGeometry;

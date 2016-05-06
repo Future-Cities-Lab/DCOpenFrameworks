@@ -9,14 +9,6 @@ float sphereZPos;
 
 float spheresXPos[20];
 float spheresZPos[20];
-//float sphereZPos;
-
-
-vector<ofVideoGrabber> videoGrabbers;
-//vector<ofxCvGrayscaleImage> grayImages, grayBgs, grayDiffs;
-vector<ofxCvContourFinder> contourFinders;
-//vector<ofxCvColorImage> colorImgs;
-vector<bool> learnBack;
 
 void ofApp::setup(){
     ofEnableSmoothing();
@@ -43,10 +35,6 @@ void ofApp::setup(){
     std::string columnsFile = "Lightweave_columns2.json";
     std::string facesFile = "Lightweave_faces2.json";
     
-//    std::string file = "Lightweave_loops.json";
-//    std::string columnsFile = "Lightweave_columns.json";
-//    std::string facesFile = "Lightweave_faces.json";
-    
     bool parsingSuccessful = result.open(file);
     
     bool parsingSuccessfulColumn = columnGeometry.open(columnsFile);
@@ -66,66 +54,35 @@ void ofApp::setup(){
         }
     }
     
+    
     backgroundImage.loadImage("unnamed.jpg");
     
     //setupUDP();
     
-    
-    
     camWidth = 320;
     camHeight = 240;
 
-//    vector<ofVideoDevice> devices = vidGrabber.listDevices();
-//    
-//    for(int i = 0; i < devices.size(); i++){
-//        if(devices[i].bAvailable){
-//            ofLogNotice() << devices[i].id << ": " << devices[i].deviceName;
-//        }else{
-//            ofLogNotice() << devices[i].id << ": " << devices[i].deviceName << " - unavailable ";
-//        }
-//    }
+    vector<ofVideoDevice> devices = vidGrabber.listDevices();
+    for (int i = 0; i < devices.size(); i++) {
+        if (devices[i].bAvailable) {
+            ofLogNotice() << devices[i].id << ": " << devices[i].deviceName;
+        } else {
+            ofLogNotice() << devices[i].id << ": " << devices[i].deviceName << " - unavailable ";
+        }
+    }
    
-///* NEW CODE: MULTIPLE CAMERAS */
-//    for (int i = 0; i < devices.size(); i++) {
-//        
-//        ofVideoGrabber grab;
-//        grab.setDeviceID(i);
-//        grab.setDesiredFrameRate(10);
-//        grab.initGrabber(camWidth, camHeight);
-//        videoGrabbers.push_back(grab);
-//        learnBack.push_back(true);
-//
-////        ofxCvGrayscaleImage grayImage;
-////        ofxCvGrayscaleImage grayBg;
-////        ofxCvGrayscaleImage grayDiff;
-////        ofxCvColorImage colorImg;
-////        grayImage.allocate(320,240);
-////        grayBg.allocate(320,240);
-////        grayDiff.allocate(320,240);
-////        colorImg.allocate(320,240);
-////        grayImages.push_back(grayImage);
-////        grayBgs.push_back(grayBg);
-////        grayDiffs.push_back(grayImage);
-//        ofxCvContourFinder *findeR = new ofxCvContourFinder;
-//        contourFinders.push_back(*findeR);
-////        colorImgs.push_back(colorImg);
-//    }
-
-/* OLD CODE: ONE CAMERAS */
-//    vidGrabber.setDeviceID(0);
-//    vidGrabber.setDesiredFrameRate(60);
-//    vidGrabber.initGrabber(camWidth, camHeight);
+    vidGrabber.setDeviceID(0);
+    vidGrabber.setDesiredFrameRate(60);
+    vidGrabber.initGrabber(camWidth, camHeight);
     
     colorImg.allocate(320,240);
     grayImage.allocate(320,240);
     grayBg.allocate(320,240);
     grayDiff.allocate(320,240);
     
-    //bLearnBackground = true;
+    bLearnBackground = true;
     threshold = 80;
-    
-    //videoTexture.allocate(videoInverted);
-    
+        
     bottomSwarm.a = 1.1f;
     bottomSwarm.b = (curWidth/4.0);
     bottomSwarm.c = 100.0;
@@ -147,48 +104,41 @@ void ofApp::setup(){
         spheresXPos[i] = ofRandom(result["region0"]["ring0"]["point0"][0].asFloat()-500, result["region0"]["ring0"]["point0"][0].asFloat()+500.0);
         spheresZPos[i] = ofRandom(result["region0"]["ring0"]["point0"][2].asFloat()-100.0, result["region0"]["ring0"]["point0"][2].asFloat()+100.0);
     }
+    
+    /* LIGHTING */
+    ofSetSmoothLighting(true);
+    
+
+    pointLight.setDiffuseColor( ofColor(0.f, 255.f, 0.f));
+    
+    pointLight.setSpecularColor( ofColor(255.f, 255.f, 255.f));
+    pointLight.setPosition(result["region0"]["ring0"]["point0"][0].asFloat(),result["region0"]["ring0"]["point0"][1].asFloat(),result["region0"]["ring0"]["point0"][2].asFloat());
+    
+    material.setShininess( 64 );
+    
+    colorHue = ofRandom(0, 250);
+    
+    lightColor.setBrightness( 180.f );
+    lightColor.setSaturation( 150.f );
+    
+    materialColor.setBrightness(250.f);
+    materialColor.setSaturation(200);
 }
 
 void ofApp::update() {
-    //cam.setPosition(ofMap(mouseX, 0, ofGetWidth(), 2477.176854, -4000.0), 1000, ofMap(mouseY, 0, ofGetHeight(), 1600, -1600));
-    for (int i = 0; i < videoGrabbers.size(); i++) {
-        videoGrabbers[i].update();
+    vidGrabber.update();
+    //do we have a new frame?
+    if (vidGrabber.isFrameNew()){
+        colorImg.setFromPixels(vidGrabber.getPixels());
+        grayImage = colorImg; // convert our color image to a grayscale image
+        if (bLearnBackground == true) {
+            grayBg = grayImage; // update the background image
+            bLearnBackground = false;
+        }
+        grayDiff.absDiff(grayBg, grayImage);
+        grayDiff.threshold(30);
+        contourFinder.findContours(grayDiff, 5, (340*240)/4, 4, false, true);
     }
-
-    /* OLD CODE: ONE CAMERA */
-//    vidGrabber.update();
-//    bNewFrame = vidGrabber.isFrameNew();
-//    if (bNewFrame) {
-//        colorImg.setFromPixels(vidGrabber.getPixels());
-//        grayImage = colorImg;
-//        if (bLearnBackground == true){
-//            grayBg = grayImage;
-//            bLearnBackground = false;
-//        }
-//        grayDiff.absDiff(grayBg, grayImage);
-//        grayDiff.threshold(threshold);
-//        contourFinder.findContours(grayDiff, 20, (340*240)/3, 10, true);
-//    }
-
-/* NEW CODE: MULTIPLE CAMERAS */
-//    for (int i = 0; i < videoGrabbers.size(); i++) {
-//        videoGrabbers[i].update();
-//        bNewFrame = videoGrabbers[i].isFrameNew();
-//        if (bNewFrame) {
-//            colorImgs[i].setFromPixels(videoGrabbers[i].getPixels());
-//            grayImages[i] = colorImgs[i];
-//            if (bLearnBackground == true){
-//                grayBgs[i] = grayImages[i];
-//                bLearnBackground = false;
-//            }
-//            grayDiffs[i].absDiff(grayBgs[i], grayImages[i]);
-//            grayDiffs[i].threshold(threshold);
-//            contourFinders[i].findContours(grayDiffs[i], 20, (340*240)/3, 10, true);
-//        }
-//   }
-    
-    /* NEWEST CODE: MULTIPLE CAMERAS, ONE SET OF BUFFERS */
-
     
     switch (ANIMATION_STATE) {
         case ACTIVATED: {
@@ -254,7 +204,9 @@ void ofApp::update() {
     }
     int cnt = 0;
     for (int i = 0; i < 11; i++) {
-        micLevelsTop[i] = 0.0;
+        if (i != 4) {
+            micLevelsTop[i] = 0.0;
+        }
     }
     int cntN = 0;
     for (int region = 3; region < 6; region++) {
@@ -269,14 +221,26 @@ void ofApp::update() {
             string point = "point" + ofToString(pointPos);
             float colX = columnGeometry[reg][point][0].asFloat();
             for (int i = 0; i < 20; i++) {
-                if (abs(spheresXPos[i]-columnGeometry[reg][point][0].asFloat()) < 100) {
-                    micLevelsTop[cntN]++;
+                if (i != 4) {
+                    if (abs(spheresXPos[i]-columnGeometry[reg][point][0].asFloat()) < 100) {
+                        micLevelsTop[cntN]++;
+                    }
                 }
             }
             cntN++;
 
         }
     }
+    
+    /* LIGHTING */
+//    colorHue += .1f;
+//    if (colorHue >= 255) {
+//        colorHue = 0.f;
+//    }
+    lightColor.setHue(colorHue);
+    pointLight.setDiffuseColor(lightColor);
+    materialColor.setHue(colorHue);
+    material.setSpecularColor(materialColor);
 }
 
 //--------------------------------------------------------------
@@ -304,11 +268,15 @@ void ofApp::draw() {
         cnt++;
     }
     
+    ofEnableLighting();
+    pointLight.enable();
+    material.begin();
     ofPushMatrix();
     cam.begin();
-    newDrawRegion(gaussianBottom, 0, 3, false);
+
     ofSetColor(255);
     ofFill();
+
     for (int i = 0; i < 20; i++) {
         ofCylinderPrimitive cyl;
         cyl.setPosition(spheresXPos[i]+=ofRandom(0.5), spheresZPos[i], 28.9297);
@@ -319,52 +287,83 @@ void ofApp::draw() {
             spheresXPos[i] = ofRandom(result["region0"]["ring0"]["point0"][0].asFloat()-500, result["region0"]["ring0"]["point0"][0].asFloat()+500.0);
         }
     }
+    
     ofSetColor(100.0);
     ofFill();
     int ct = 0;
     for (int region = 0; region < 3; region++) {
         string reg = "region" + ofToString(region);
         for (int pointPos = 0; pointPos < 4; pointPos++) {
-            string point = "point" + ofToString(pointPos);
-            ofCylinderPrimitive cyl;
-            cyl.setPosition(columnGeometry[reg][point][0].asFloat(), columnGeometry[reg][point][1].asFloat(), columnGeometry[reg][point][2].asFloat()-90);
-            cyl.set(2.0, 130.0);
-            cyl.rotate(90, ofVec3f(1.0, 0.0, 0.0));
-            if (ct == 4) {
-                ofSetColor(255.0, 0.0, 255.0);
-                ofFill();
-                cyl.draw();
-                ofSetColor(100.0);
-                ofFill();
+            if (region == 1 && pointPos == 3) {
+                
             } else {
-                cyl.draw();
+                string point = "point" + ofToString(pointPos);
+                ofCylinderPrimitive cyl;
+                cyl.setPosition(columnGeometry[reg][point][0].asFloat(), columnGeometry[reg][point][1].asFloat(), columnGeometry[reg][point][2].asFloat()-90);
+                cyl.set(2.0, 130.0);
+                cyl.rotate(90, ofVec3f(1.0, 0.0, 0.0));
+                if (ct == 4) {
+                    ofSetColor(255.0, 0.0, 255.0);
+                    ofFill();
+                    cyl.draw();
+                    ofSetColor(100.0);
+                    ofFill();
+                } else {
+                    cyl.draw();
+                }
+                ct++;
             }
-            ct++;
         }
     }
+    material.end();
+    ofDisableLighting();
+    
+    newDrawRegion(gaussianBottom, 0, 3, false);
+
+    
+    ofSetColor(155.0, 155.0, 155.0);
+    ofFill();
     for (int face = 0; face < 5; face++) {
         string fac = "face" + ofToString(face);
-        ofMesh mesh;
-        mesh.setMode(OF_PRIMITIVE_TRIANGLES);
-        mesh.addVertex(ofPoint(faceGeometry[fac]["point0"][0].asFloat(),faceGeometry[fac]["point0"][1].asFloat(),faceGeometry[fac]["point0"][2].asFloat()));
-        mesh.addVertex(ofPoint(faceGeometry[fac]["point1"][0].asFloat(),faceGeometry[fac]["point1"][1].asFloat(),faceGeometry[fac]["point1"][2].asFloat()));
-        mesh.addVertex(ofPoint(faceGeometry[fac]["point2"][0].asFloat(),faceGeometry[fac]["point2"][1].asFloat(),faceGeometry[fac]["point2"][2].asFloat()));
-        mesh.addVertex(ofPoint(faceGeometry[fac]["point3"][0].asFloat(),faceGeometry[fac]["point3"][1].asFloat(),faceGeometry[fac]["point3"][2].asFloat()));
-        mesh.addColor(ofColor(155.0, 155.0, 155.0));
-        mesh.addColor(ofColor(155.0, 155.0, 155.0));
-        mesh.addColor(ofColor(155.0, 155.0, 155.0));
-        mesh.addColor(ofColor(155.0, 155.0, 155.0));
+//        ofMesh mesh;
+//        
+//        mesh.setMode(OF_PRIMITIVE_TRIANGLES);
+//        mesh.addVertex(ofPoint(faceGeometry[fac]["point0"][0].asFloat(),faceGeometry[fac]["point0"][1].asFloat(),faceGeometry[fac]["point0"][2].asFloat()));
+//        mesh.addVertex(ofPoint(faceGeometry[fac]["point1"][0].asFloat(),faceGeometry[fac]["point1"][1].asFloat(),faceGeometry[fac]["point1"][2].asFloat()));
+//        mesh.addVertex(ofPoint(faceGeometry[fac]["point2"][0].asFloat(),faceGeometry[fac]["point2"][1].asFloat(),faceGeometry[fac]["point2"][2].asFloat()));
+//        mesh.addVertex(ofPoint(faceGeometry[fac]["point3"][0].asFloat(),faceGeometry[fac]["point3"][1].asFloat(),faceGeometry[fac]["point3"][2].asFloat()));
+//        mesh.addColor(ofColor(155.0, 155.0, 155.0));
+//        mesh.addColor(ofColor(155.0, 155.0, 155.0));
+//        mesh.addColor(ofColor(155.0, 155.0, 155.0));
+//        mesh.addColor(ofColor(155.0, 155.0, 155.0));
+//
+//        mesh.addIndex(0); //connect the first vertex we made, v0
+//        mesh.addIndex(1); //to v1
+//        mesh.addIndex(2); //to v2 to complete the face
+//        mesh.addIndex(2); //now start a new face beginning with v1
+//        mesh.addIndex(3); //that is connected to v2
+//        mesh.addIndex(0); //and we complete the face with v3
+//        mesh.drawWireframe();
+        ofPoint p1;
+        ofPoint p2;
+        ofPoint p3;
+        ofPoint p4;
+        p1.set(ofVec3f(faceGeometry[fac]["point0"][0].asFloat(),faceGeometry[fac]["point0"][1].asFloat(),faceGeometry[fac]["point0"][2].asFloat()));
+        p2.set(ofVec3f(faceGeometry[fac]["point1"][0].asFloat(),faceGeometry[fac]["point1"][1].asFloat(),faceGeometry[fac]["point1"][2].asFloat()));
+        p3.set(ofVec3f(faceGeometry[fac]["point2"][0].asFloat(),faceGeometry[fac]["point2"][1].asFloat(),faceGeometry[fac]["point2"][2].asFloat()));
+        p4.set(ofVec3f(faceGeometry[fac]["point3"][0].asFloat(),faceGeometry[fac]["point3"][1].asFloat(),faceGeometry[fac]["point3"][2].asFloat()));
+        
+        ofDrawLine(p1, p2);
+        ofDrawLine(p2, p3);
+        ofDrawLine(p3, p4);
+        ofDrawLine(p4, p1);
 
-        mesh.addIndex(0); //connect the first vertex we made, v0
-        mesh.addIndex(1); //to v1
-        mesh.addIndex(2); //to v2 to complete the face
-        mesh.addIndex(2); //now start a new face beginning with v1
-        mesh.addIndex(3); //that is connected to v2
-        mesh.addIndex(0); //and we complete the face with v3
-        mesh.draw();
+        
     }
     cam.end();
     ofPopMatrix();
+
+
     ofSetColor(255);
     ofFill();
     ofDrawRectangle(swarmPosition.x, 45, 10, 50);
@@ -382,57 +381,15 @@ void ofApp::draw() {
     ofDrawBitmapString("Left Arrow = Move Left, Right Arrow = Move Right", 10, 140);
     ofDrawBitmapString("Number of People/Column", 1010, 60);
 
-
-//    for (int i = 0; i < videoGrabbers.size(); i++) {
-//        videoGrabbers[i].draw(360*i, 0);
-//    }
-//    for (int i = 0; i < videoGrabbers.size(); i++) {
-//        if (videoGrabbers[i].isFrameNew()) {
-//            colorImg.setFromPixels(videoGrabbers[i].getPixels());
-//            grayImage = colorImg;
-//            if (learnBack[i] == true){
-//                grayBg = grayImage;
-//                learnBack[i] = false;
-//            }
-//            grayDiff.absDiff(grayBg, grayImage);
-//            grayDiff.threshold(threshold);
-//            contourFinders[i].findContours(grayDiff, 20, (340*240)/3, 10, true);
-//        }
-//        for (int j = 0; j < contourFinder.nBlobs; j++){
-//            contourFinders[i].blobs[j].draw(360*i, 0);
-//        }
-//    }
-    
-//     micLevelsBottom[7] = contourFinder.nBlobs;
-//    for (int i = 0; i < contourFinder.nBlobs; i++){
-//        contourFinder.blobs[i].draw(0, 0);
-//    }
-//    ofDrawRectangle(0, 0, 320, 240);
+    //ofDrawRectangle(660, 360, 320, 240);
+    for (int j = 0; j < contourFinder.nBlobs; j++){
+        contourFinder.blobs[j].draw(660, 360);
+    }
+    micLevelsTop[4] = contourFinder.nBlobs;
+    //ofDrawRectangle(660, 360, 320, 240);
 //    ofSetHexColor(0xffffff);
 //    ofFill();
-/* NEW CODE: MULTIPLE CAMERAS */
-//    ofFill();
-//    ofSetHexColor(0x333333);
-//    for (int i = 0; i < videoGrabbers.size(); i++) {
-//        ofDrawRectangle(360*i,0,320,240);
-//
-//        contourFinders[i].draw(360*i,0);
-//        micLevelsBottom[7] = contourFinders[i].nBlobs;
-//        for (int j = 0; j < contourFinders[i].nBlobs; j++){
-//            contourFinders[i].blobs[j].draw(360, 0);
-//        }
-//    }
-//    ofSetHexColor(0xffffff);
 
-
-// finally, a report:
-//    ofSetHexColor(0xffffff);
-//    stringstream reportStr;
-//    reportStr << "bg subtraction and blob detection" << endl
-//    << "press ' ' to capture bg" << endl
-//    << "threshold " << threshold << " (press: +/-)" << endl
-//    << "num blobs found " << contourFinder.nBlobs << ", fps: " << ofGetFrameRate();
-//    ofDrawBitmapString(reportStr.str(), 20, 600);
 }
 
 //--------------------------------------------------------------
@@ -488,48 +445,6 @@ void ofApp::sendToDMX() {
     dmxData_[10] = int(c.r);
     dmxData_[11] = int(c.g);
     dmxData_[12] = int(c.b);
-    
-//    ofColor c1;
-//    ofColor c2;
-//    ofColor c3;
-//    ofColor c4;
-//    
-//    float top_r = ofMap(backgroundLevel, 0.0, 255.0, bRed, 255.0);
-//    float top_g = ofMap(backgroundLevel, 0.0, 255.0, bGreen, 255.0);
-//    float top_b = ofMap(backgroundLevel, 0.0, 255.0, bBlue, 255.0);
-//
-//    c1.r = ofMap(gaussianBottom[result["region1"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
-//    c1.g = ofMap(gaussianBottom[result["region1"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
-//    c1.b = ofMap(gaussianBottom[result["region1"]["ring0"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
-//
-//    c2.r = ofMap(gaussianBottom[result["region1"]["ring1"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
-//    c2.g = ofMap(gaussianBottom[result["region1"]["ring1"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
-//    c2.b = ofMap(gaussianBottom[result["region1"]["ring1"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
-//
-//    c3.r = ofMap(gaussianBottom[result["region1"]["ring2"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
-//    c3.g = ofMap(gaussianBottom[result["region1"]["ring2"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
-//    c3.b = ofMap(gaussianBottom[result["region1"]["ring2"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
-//
-//    c4.r = ofMap(gaussianBottom[result["region1"]["ring3"]["point0"][0].asInt()], 51.0, 255.0, top_r, 255.0);
-//    c4.g = ofMap(gaussianBottom[result["region1"]["ring3"]["point0"][0].asInt()], 51.0, 255.0, top_g, 0.0);
-//    c4.b = ofMap(gaussianBottom[result["region1"]["ring3"]["point0"][0].asInt()], 51.0, 255.0, top_b, 0.0);
-//    
-//    dmxData_[1] = int(c1.r);
-//    dmxData_[2] = int(c1.g);
-//    dmxData_[3] = int(c1.b);
-//
-//    dmxData_[4] = int(c2.r);
-//    dmxData_[5] = int(c2.g);
-//    dmxData_[6] = int(c2.b);
-//
-//    dmxData_[7] = int(c3.r);
-//    dmxData_[8] = int(c3.g);
-//    dmxData_[9] = int(c3.b);
-//
-//    dmxData_[10] = int(c4.r);
-//    dmxData_[11] = int(c4.g);
-//    dmxData_[12] = int(c4.b);
-
     dmxData_[0] = 0;
 
     if (!dmxInterface_ || !dmxInterface_->isOpen()) {
@@ -667,9 +582,7 @@ void ofApp::keyPressed(int key) {
             ANIMATION_STATE = EVENT;
         }
     } else if (key == ' '){
-        for (int i = 0; i < learnBack.size(); i++) {
-            learnBack[i] = true;
-        }
+        bLearnBackground = true;
     } else if (key == 357) {
         cam.setPosition(cam.getX(), cam.getY(), cam.getZ() + 10.0);
     } else if (key == 359) {
