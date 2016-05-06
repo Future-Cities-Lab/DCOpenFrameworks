@@ -378,8 +378,9 @@ void ofApp::draw() {
     ofDrawBitmapString("Press A to Activate", 10, 160);
     ofDrawBitmapString("Press D to Deactivate", 10, 180);
     ofDrawBitmapString("Magenta Column/Dot is Office Column/Dot", 10, 200);
-    ofDrawBitmapString("Left Arrow = Move Left, Right Arrow = Move Right", 10, 140);
     ofDrawBitmapString("Number of People/Column", 1010, 60);
+    ofDrawBitmapString("Spacebar to reset camera", 10, 220);
+
 
     //ofDrawRectangle(660, 360, 320, 240);
     for (int j = 0; j < contourFinder.nBlobs; j++){
