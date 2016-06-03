@@ -102,10 +102,10 @@ void ofApp::setup() {
         }
     }
 
-    vidGrabber.setDeviceID(1);
+    vidGrabber.setDeviceID(0);
     vidGrabber.initGrabber(320,240);
     
-    vidGrabber1.setDeviceID(2);
+    vidGrabber1.setDeviceID(1);
     vidGrabber1.initGrabber(320,240);
     
     colorImg1.allocate(320,240);
