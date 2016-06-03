@@ -102,10 +102,10 @@ void ofApp::setup() {
         }
     }
 
-    vidGrabber.setDeviceID(0);
+    vidGrabber.setDeviceID(1);
     vidGrabber.initGrabber(320,240);
     
-    vidGrabber1.setDeviceID(1);
+    vidGrabber1.setDeviceID(2);
     vidGrabber1.initGrabber(320,240);
     
     colorImg1.allocate(320,240);
@@ -147,7 +147,6 @@ void ofApp::setup() {
     
     /* LIGHTING */
     ofSetSmoothLighting(true);
-    
 
     pointLight.setDiffuseColor( ofColor(0.f, 255.f, 0.f));
     
@@ -158,7 +157,6 @@ void ofApp::setup() {
     
     colorHue = ofRandom(0, 250);
     colorHue2 = ofRandom(0, 250);
-
     
     lightColor.setBrightness( 180.f );
     lightColor.set(250,250,210);
@@ -178,7 +176,6 @@ void ofApp::setup() {
     
     materialColor.set(55.0,55.0,55.0);
     peopleMaterial.setSpecularColor(materialColor);
-    
     
     cameraColor1.set(0.0, 0.0, 255.0);
     cameraColor2.set(0.0, 0.0, 255.0);
@@ -407,7 +404,7 @@ void ofApp::draw() {
         ofVec2f desired =  btm - swarmPosition;
         float d = sqrt((desired.x*desired.x) + (desired.y+desired.y));
         float r = ofMap(ofClamp(d, 0.0, 700.0), 0.0, 700.0, 25.0, 76.5);
-        ofColor swarmColor = ofColor::fromHsb(r, 255, 255);
+        ofColor swarmColor = ofColor(255.0, 0.0, 255.0);
         ofSetColor(swarmColor);
         ofDrawRectangle(swarmPosition.x, 45, 10, 50);
         ofSetColor(columnColor);
@@ -519,6 +516,14 @@ void ofApp::draw() {
     ofPopMatrix();
 
     sendToDMX();
+    
+    vector<ofVideoDevice> devices = vidGrabber.listDevices();
+
+    for (int i = 0; i < devices.size(); i++) {
+        if (devices[i].bAvailable) {
+            ofDrawBitmapString(devices[i].deviceName, 400, 50*i);
+        }
+    }
 }
 
 //--------------------------------------------------------------
@@ -605,27 +610,36 @@ void ofApp::newDrawRegion(float gaussLevels[1280], int start, int end, bool isEv
             float top_g = ofMap(backgroundLevel, 0.0, 255.0, bGreen, 255.0);
             float top_b = ofMap(backgroundLevel, 0.0, 255.0, bBlue, 255.0);
 
-            int max_pos = 0;
-            int max_element = -1000;
-            for (int i = 0; i < 12; i++) {
-                if (micLevelsTopNew[i] > max_element) {
-                    max_pos = i;
-                    max_element = micLevelsTopNew[i];
-                }
-            }
+//            int max_pos = 0;
+//            int max_element = -1000;
+//            for (int i = 0; i < 12; i++) {
+//                if (micLevelsTopNew[i] > max_element) {
+//                    max_pos = i;
+//                    max_element = micLevelsTopNew[i];
+//                }
+//            }
+//
+//            //ofVec2f btm = absColumnPositionTop[max_pos];
+//            ofVec2f btm = cameraPositionsTop[max_pos];
+//            ofVec2f desired =  btm - swarmPosition;
+//            float d = sqrt((desired.x*desired.x) + (desired.y+desired.y));
+//
+//            float r = ofMap(ofClamp(d, 0.0, 700.0), 0.0, 700.0, 25.0, 76.5);
 
-            //ofVec2f btm = absColumnPositionTop[max_pos];
-            ofVec2f btm = cameraPositionsTop[max_pos];
-            ofVec2f desired =  btm - swarmPosition;
-            float d = sqrt((desired.x*desired.x) + (desired.y+desired.y));
+            ofColor bleh = ofColor(255.0, 0.0, 255.0);
+            
+            float newGauss = ofClamp(gauss, 210.0, 255.0);
 
-            float r = ofMap(ofClamp(d, 0.0, 700.0), 0.0, 700.0, 25.0, 76.5);
+//            c.r = ofMap(gauss, 51.0, 255.0, top_r, bleh.r);
+//            c.g = ofMap(gauss, 51.0, 255.0, top_g, bleh.g);
+//            c.b = ofMap(gauss, 51.0, 255.0, top_b, bleh.b);
+            
+            //cout << newGauss << endl;
 
-            ofColor bleh = ofColor::fromHsb(r, 255, 255);
+            c.r = ofMap(newGauss, 210.0, 255.0, top_r, bleh.r);
+            c.g = ofMap(newGauss, 210.0, 255.0, top_g, bleh.g);
+            c.b = ofMap(newGauss, 210.0, 255.0, top_b, bleh.b);
 
-            c.r = ofMap(gauss, 51.0, 255.0, top_r, bleh.r);
-            c.g = ofMap(gauss, 51.0, 255.0, top_g, bleh.g);
-            c.b = ofMap(gauss, 51.0, 255.0, top_b, bleh.b);
             
             ofSetColor(c);
             ofFill();
