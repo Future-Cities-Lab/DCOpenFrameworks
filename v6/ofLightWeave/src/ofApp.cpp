@@ -543,27 +543,30 @@ void ofApp::sendToDMX() {
     float top_g = ofMap(backgroundLevel, 0.0, 255.0, bGreen, 255.0);
     float top_b = ofMap(backgroundLevel, 0.0, 255.0, bBlue, 255.0);
     
-    int max_pos = 0;
-    int max_element = -1000;
-    for (int i = 0; i < 12; i++) {
-        if (micLevelsTopNew[i] > max_element) {
-            max_pos = i;
-            max_element = micLevelsTopNew[i];
-        }
-    }
+//    int max_pos = 0;
+//    int max_element = -1000;
+//    for (int i = 0; i < 12; i++) {
+//        if (micLevelsTopNew[i] > max_element) {
+//            max_pos = i;
+//            max_element = micLevelsTopNew[i];
+//        }
+//    }
+//    
+//    //ofVec2f btm = absColumnPositionTop[max_pos];
+//    ofVec2f btm = cameraPositionsTop[max_pos];
+//    ofVec2f desired =  btm - swarmPosition;
+//    float d = sqrt((desired.x*desired.x) + (desired.y+desired.y));
+//    
+//    float r = ofMap(ofClamp(d, 0.0, 700.0), 0.0, 700.0, 25.0, 76.5);
     
-    //ofVec2f btm = absColumnPositionTop[max_pos];
-    ofVec2f btm = cameraPositionsTop[max_pos];
-    ofVec2f desired =  btm - swarmPosition;
-    float d = sqrt((desired.x*desired.x) + (desired.y+desired.y));
+    ofColor bleh = ofColor(255.0, 0.0, 255.0);
     
-    float r = ofMap(ofClamp(d, 0.0, 700.0), 0.0, 700.0, 25.0, 76.5);
+    float newGauss = ofClamp(gauss, 210.0, 255.0);
     
-    ofColor bleh = ofColor::fromHsb(r, 255, 255);
     
-    c.r = ofMap(gauss, 51.0, 255.0, top_r, bleh.r);
-    c.g = ofMap(gauss, 51.0, 255.0, top_g, bleh.g);
-    c.b = ofMap(gauss, 51.0, 255.0, top_b, bleh.b);
+    c.r = ofMap(newGauss, 210.0, 255.0, top_r, bleh.r);
+    c.g = ofMap(newGauss, 210.0, 255.0, top_g, bleh.g);
+    c.b = ofMap(newGauss, 210.0, 255.0, top_b, bleh.b);
     
     dmxData_[1] = int(c.r);
     dmxData_[2] = int(c.g);
@@ -610,31 +613,10 @@ void ofApp::newDrawRegion(float gaussLevels[1280], int start, int end, bool isEv
             float top_g = ofMap(backgroundLevel, 0.0, 255.0, bGreen, 255.0);
             float top_b = ofMap(backgroundLevel, 0.0, 255.0, bBlue, 255.0);
 
-//            int max_pos = 0;
-//            int max_element = -1000;
-//            for (int i = 0; i < 12; i++) {
-//                if (micLevelsTopNew[i] > max_element) {
-//                    max_pos = i;
-//                    max_element = micLevelsTopNew[i];
-//                }
-//            }
-//
-//            //ofVec2f btm = absColumnPositionTop[max_pos];
-//            ofVec2f btm = cameraPositionsTop[max_pos];
-//            ofVec2f desired =  btm - swarmPosition;
-//            float d = sqrt((desired.x*desired.x) + (desired.y+desired.y));
-//
-//            float r = ofMap(ofClamp(d, 0.0, 700.0), 0.0, 700.0, 25.0, 76.5);
-
             ofColor bleh = ofColor(255.0, 0.0, 255.0);
             
             float newGauss = ofClamp(gauss, 210.0, 255.0);
 
-//            c.r = ofMap(gauss, 51.0, 255.0, top_r, bleh.r);
-//            c.g = ofMap(gauss, 51.0, 255.0, top_g, bleh.g);
-//            c.b = ofMap(gauss, 51.0, 255.0, top_b, bleh.b);
-            
-            //cout << newGauss << endl;
 
             c.r = ofMap(newGauss, 210.0, 255.0, top_r, bleh.r);
             c.g = ofMap(newGauss, 210.0, 255.0, top_g, bleh.g);
