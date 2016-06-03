@@ -24,6 +24,7 @@ float damping   =      .98;
  */
 ofVideoGrabber 		    vidGrabber;
 ofVideoGrabber 		    vidGrabber1;
+vector<int> pcCams;
 
 
 ofxCvColorImage			colorImg;
@@ -102,7 +103,6 @@ void ofApp::setup() {
         }
     }
     
-    vector<int> pcCams;
     for (int i = 0; i < devices.size(); i++) {
         if (!devices[i].deviceName.find("USB")) {
             cout << devices[i].id << endl;
@@ -110,8 +110,6 @@ void ofApp::setup() {
         }
     }
     
-    cout << pcCams[0] << endl;
-    cout << pcCams[1] << endl;
 
     vidGrabber.setDeviceID(pcCams[0]);
     vidGrabber.initGrabber(320,240);
@@ -530,11 +528,14 @@ void ofApp::draw() {
     
     vector<ofVideoDevice> devices = vidGrabber.listDevices();
 
-    for (int i = 0; i < devices.size(); i++) {
-        if (devices[i].bAvailable) {
-            ofDrawBitmapString(devices[i].deviceName, 400, 50*i);
-        }
-    }
+//    for (int i = 0; i < devices.size(); i++) {
+//        if (devices[i].bAvailable) {
+//            ofDrawBitmapString(devices[i].deviceName, 400, 50*i);
+//        }
+//    }
+    
+    ofDrawBitmapString(pcCams[0], 400, 50);
+    ofDrawBitmapString(pcCams[1], 400, 100);
 }
 
 //--------------------------------------------------------------
