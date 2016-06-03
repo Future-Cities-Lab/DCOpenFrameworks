@@ -16,7 +16,7 @@ ofColor columnColor;
 ofColor activeColor;
 
 float springing =      .0009;
-float damping =        .98;
+float damping   =      .98;
 
 /* 
  NEW CAMERA CODE:
@@ -101,11 +101,22 @@ void ofApp::setup() {
             ofLogNotice() << devices[i].id << ": " << devices[i].deviceName << " - unavailable ";
         }
     }
+    
+    vector<int> pcCams;
+    for (int i = 0; i < devices.size(); i++) {
+        if (!devices[i].deviceName.find("USB")) {
+            cout << devices[i].id << endl;
+            pcCams.push_back(devices[i].id);
+        }
+    }
+    
+    cout << pcCams[0] << endl;
+    cout << pcCams[1] << endl;
 
-    vidGrabber.setDeviceID(1);
+    vidGrabber.setDeviceID(pcCams[0]);
     vidGrabber.initGrabber(320,240);
     
-    vidGrabber1.setDeviceID(2);
+    vidGrabber1.setDeviceID(pcCams[1]);
     vidGrabber1.initGrabber(320,240);
     
     colorImg1.allocate(320,240);
