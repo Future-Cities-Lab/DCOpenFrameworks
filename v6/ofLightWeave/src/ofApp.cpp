@@ -528,14 +528,9 @@ void ofApp::draw() {
     
     vector<ofVideoDevice> devices = vidGrabber.listDevices();
 
-//    for (int i = 0; i < devices.size(); i++) {
-//        if (devices[i].bAvailable) {
-//            ofDrawBitmapString(devices[i].deviceName, 400, 50*i);
-//        }
-//    }
     
-    ofDrawBitmapString(pcCams[0], 400, 50);
-    ofDrawBitmapString(pcCams[1], 400, 100);
+    //ofDrawBitmapString(pcCams[0], 400, 50);
+    //ofDrawBitmapString(pcCams[1], 400, 100);
 }
 
 //--------------------------------------------------------------
@@ -544,7 +539,7 @@ void ofApp::draw() {
 
 void ofApp::sendToDMX() {
     
-    float inRes = result["region1"]["ring0"]["point0"][0].asFloat();
+    float inRes = result["region1"]["ring8"]["point0"][0].asFloat();
     float in = ofMap(inRes, -2000.0, -40.0, 0.0, 1280.0);
     int inInt = (int) in;
     int gauss = gaussianBottom[inInt];
@@ -555,21 +550,6 @@ void ofApp::sendToDMX() {
     float top_g = ofMap(backgroundLevel, 0.0, 255.0, bGreen, 255.0);
     float top_b = ofMap(backgroundLevel, 0.0, 255.0, bBlue, 255.0);
     
-//    int max_pos = 0;
-//    int max_element = -1000;
-//    for (int i = 0; i < 12; i++) {
-//        if (micLevelsTopNew[i] > max_element) {
-//            max_pos = i;
-//            max_element = micLevelsTopNew[i];
-//        }
-//    }
-//    
-//    //ofVec2f btm = absColumnPositionTop[max_pos];
-//    ofVec2f btm = cameraPositionsTop[max_pos];
-//    ofVec2f desired =  btm - swarmPosition;
-//    float d = sqrt((desired.x*desired.x) + (desired.y+desired.y));
-//    
-//    float r = ofMap(ofClamp(d, 0.0, 700.0), 0.0, 700.0, 25.0, 76.5);
     
     ofColor bleh = ofColor(255.0, 0.0, 255.0);
     
