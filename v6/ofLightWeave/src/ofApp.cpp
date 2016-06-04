@@ -46,7 +46,7 @@ bool				    bLearnBackground1;
 
 bool                    drawOne;
 
-int timeToReset = 10000;
+int timeToReset = 20000;
 float lastTime = 0.0;
 
 void ofApp::setup() {
