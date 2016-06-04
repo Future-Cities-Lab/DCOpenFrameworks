@@ -46,6 +46,9 @@ bool				    bLearnBackground1;
 
 bool                    drawOne;
 
+int timeToReset = 10000;
+float lastTime = 0.0;
+
 void ofApp::setup() {
     
     ofEnableSmoothing();
@@ -198,6 +201,12 @@ void ofApp::setup() {
 }
 
 void ofApp::update() {
+    
+    if (ofGetElapsedTimeMillis() - lastTime >= timeToReset) {
+        lastTime = ofGetElapsedTimeMillis();
+        bLearnBackground = true;
+        bLearnBackground1 = true;
+    }
     
     
     micLevelsTopNew[4] = contourFinder.nBlobs;
@@ -546,22 +555,22 @@ void ofApp::draw() {
 
 void ofApp::sendToDMX() {
     
-    float inRes = result["region1"]["ring11"]["point0"][0].asFloat();
+    float inRes = result["region1"]["ring10"]["point0"][0].asFloat();
     float in = ofMap(inRes, -2000.0, -40.0, 0.0, 1280.0);
     int inInt = (int) in;
     int gauss = gaussianBottom[inInt];
     
-    float inRes2 = result["region1"]["ring10"]["point0"][0].asFloat();
+    float inRes2 = result["region1"]["ring9"]["point0"][0].asFloat();
     float in2 = ofMap(inRes2, -2000.0, -40.0, 0.0, 1280.0);
     int inInt2 = (int) in2;
     int gauss2 = gaussianBottom[inInt2];
     
-    float inRes3 = result["region1"]["ring9"]["point0"][0].asFloat();
+    float inRes3 = result["region1"]["ring8"]["point0"][0].asFloat();
     float in3 = ofMap(inRes3, -2000.0, -40.0, 0.0, 1280.0);
     int inInt3 = (int) in3;
     int gauss3 = gaussianBottom[inInt3];
     
-    float inRes4 = result["region1"]["ring8"]["point0"][0].asFloat();
+    float inRes4 = result["region1"]["ring7"]["point0"][0].asFloat();
     float in4 = ofMap(inRes4, -2000.0, -40.0, 0.0, 1280.0);
     int inInt4 = (int) in4;
     int gauss4 = gaussianBottom[inInt4];
