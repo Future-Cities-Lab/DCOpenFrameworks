@@ -112,9 +112,13 @@ void ofApp::setup() {
     
 
     vidGrabber.setDeviceID(pcCams[0]);
+//    vidGrabber.setDeviceID(0);
+
     vidGrabber.initGrabber(320,240);
     
     vidGrabber1.setDeviceID(pcCams[1]);
+//    vidGrabber1.setDeviceID(0);
+
     vidGrabber1.initGrabber(320,240);
     
     colorImg1.allocate(320,240);
@@ -421,11 +425,6 @@ void ofApp::draw() {
         ofDrawCircle(578, 270, 14);
     
         
-        ofNoFill();
-        ofSetColor(cameraColor1);
-        ofDrawBitmapString("Camera 5", 238, 140);
-        ofDrawRectangle(238, 150, 340, 240);
-        
         for (int i = 0; i < contourFinder.nBlobs; i++){
             contourFinder.blobs[i].draw(238, 150);
             
@@ -436,11 +435,13 @@ void ofApp::draw() {
                                    contourFinder.blobs[i].boundingRect.getCenter().y + 540);
             }
         }
-        
         ofNoFill();
-        ofSetColor(cameraColor2);
-        ofDrawBitmapString("Camera 6", 578, 140);
-        ofDrawRectangle(578, 150, 340, 240);
+        ofSetColor(cameraColor1);
+        ofDrawBitmapString("Camera 5", 238, 140);
+        ofDrawRectangle(238, 150, 340, 240);
+        ofSetColor(255,255,255,50.0);
+        colorImg.draw(238, 150);
+
         
         for (int i = 0; i < contourFinder1.nBlobs; i++){
             contourFinder1.blobs[i].draw(578, 150);
@@ -453,6 +454,12 @@ void ofApp::draw() {
                                    contourFinder1.blobs[i].boundingRect.getCenter().y + 540);
             }
         }
+        ofNoFill();
+        ofSetColor(cameraColor2);
+        ofDrawBitmapString("Camera 6", 578, 140);
+        ofDrawRectangle(578, 150, 340, 240);
+        ofSetColor(255,255,255,50.0);
+        colorImg1.draw(578, 150);
     }
     
     ofEnableLighting();
@@ -544,37 +551,71 @@ void ofApp::sendToDMX() {
     int inInt = (int) in;
     int gauss = gaussianBottom[inInt];
     
-    ofColor c;
+    float inRes2 = result["region1"]["ring9"]["point0"][0].asFloat();
+    float in2 = ofMap(inRes2, -2000.0, -40.0, 0.0, 1280.0);
+    int inInt2 = (int) in2;
+    int gauss2 = gaussianBottom[inInt2];
+    
+    float inRes3 = result["region1"]["ring10"]["point0"][0].asFloat();
+    float in3 = ofMap(inRes3, -2000.0, -40.0, 0.0, 1280.0);
+    int inInt3 = (int) in3;
+    int gauss3 = gaussianBottom[inInt3];
+    
+    float inRes4 = result["region1"]["ring11"]["point0"][0].asFloat();
+    float in4 = ofMap(inRes4, -2000.0, -40.0, 0.0, 1280.0);
+    int inInt4 = (int) in4;
+    int gauss4 = gaussianBottom[inInt4];
     
     float top_r = ofMap(backgroundLevel, 0.0, 255.0, bRed, 255.0);
     float top_g = ofMap(backgroundLevel, 0.0, 255.0, bGreen, 255.0);
     float top_b = ofMap(backgroundLevel, 0.0, 255.0, bBlue, 255.0);
     
-    
     ofColor bleh = ofColor(255.0, 0.0, 255.0);
     
-    float newGauss = ofClamp(gauss, 210.0, 255.0);
+    
+    ofColor c;
+    ofColor c2;
+    ofColor c3;
+    ofColor c4;
+
+    
+    float newGauss = ofClamp(gauss, 245.0, 255.0);
+    float newGauss2 = ofClamp(gauss2, 245.0, 255.0);
+    float newGauss3 = ofClamp(gauss3, 245.0, 255.0);
+    float newGauss4 = ofClamp(gauss4, 245.0, 255.0);
     
     
-    c.r = ofMap(newGauss, 210.0, 255.0, top_r, bleh.r);
-    c.g = ofMap(newGauss, 210.0, 255.0, top_g, bleh.g);
-    c.b = ofMap(newGauss, 210.0, 255.0, top_b, bleh.b);
+    c.r = ofMap(newGauss, 245.0, 255.0, top_r, bleh.r);
+    c.g = ofMap(newGauss, 245.0, 255.0, top_g, bleh.g);
+    c.b = ofMap(newGauss, 245.0, 255.0, top_b, bleh.b);
+    
+    c2.r = ofMap(newGauss2, 245.0, 255.0, top_r, bleh.r);
+    c2.g = ofMap(newGauss2, 245.0, 255.0, top_g, bleh.g);
+    c2.b = ofMap(newGauss2, 245.0, 255.0, top_b, bleh.b);
+    
+    c3.r = ofMap(newGauss3, 245.0, 255.0, top_r, bleh.r);
+    c3.g = ofMap(newGauss3, 245.0, 255.0, top_g, bleh.g);
+    c3.b = ofMap(newGauss3, 245.0, 255.0, top_b, bleh.b);
+    
+    c4.r = ofMap(newGauss4, 245.0, 255.0, top_r, bleh.r);
+    c4.g = ofMap(newGauss4, 245.0, 255.0, top_g, bleh.g);
+    c4.b = ofMap(newGauss4, 245.0, 255.0, top_b, bleh.b);
     
     dmxData_[1] = int(c.r);
     dmxData_[2] = int(c.g);
     dmxData_[3] = int(c.b);
 
-    dmxData_[4] = int(c.r);
-    dmxData_[5] = int(c.g);
-    dmxData_[6] = int(c.b);
+    dmxData_[4] = int(c2.r);
+    dmxData_[5] = int(c2.g);
+    dmxData_[6] = int(c2.b);
 
-    dmxData_[7] = int(c.r);
-    dmxData_[8] = int(c.g);
-    dmxData_[9] = int(c.b);
+    dmxData_[7] = int(c3.r);
+    dmxData_[8] = int(c3.g);
+    dmxData_[9] = int(c3.b);
 
-    dmxData_[10] = int(c.r);
-    dmxData_[11] = int(c.g);
-    dmxData_[12] = int(c.b);
+    dmxData_[10] = int(c4.r);
+    dmxData_[11] = int(c4.g);
+    dmxData_[12] = int(c4.b);
     dmxData_[0] = 0;
 
     if (!dmxInterface_ || !dmxInterface_->isOpen()) {
@@ -607,12 +648,12 @@ void ofApp::newDrawRegion(float gaussLevels[1280], int start, int end, bool isEv
 
             ofColor bleh = ofColor(255.0, 0.0, 255.0);
             
-            float newGauss = ofClamp(gauss, 210.0, 255.0);
+            float newGauss = ofClamp(gauss, 245.0, 255.0);
 
 
-            c.r = ofMap(newGauss, 210.0, 255.0, top_r, bleh.r);
-            c.g = ofMap(newGauss, 210.0, 255.0, top_g, bleh.g);
-            c.b = ofMap(newGauss, 210.0, 255.0, top_b, bleh.b);
+            c.r = ofMap(newGauss, 245.0, 255.0, top_r, bleh.r);
+            c.g = ofMap(newGauss, 245.0, 255.0, top_g, bleh.g);
+            c.b = ofMap(newGauss, 245.0, 255.0, top_b, bleh.b);
 
             
             ofSetColor(c);
