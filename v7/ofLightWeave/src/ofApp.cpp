@@ -574,6 +574,9 @@ void ofApp::draw() {
 
 void ofApp::sendToDMX() {
     
+    float level1 = backgroundLevel;
+    float level2 = backgroundLevel;
+    
     float inRes = result["region1"]["ring10"]["point0"][0].asFloat();
     float in = ofMap(inRes, -2000.0, -40.0, 0.0, 1280.0);
     int inInt = (int) in;
@@ -594,9 +597,17 @@ void ofApp::sendToDMX() {
     int inInt4 = (int) in4;
     int gauss4 = gaussianBottom[inInt4];
     
-    float top_r = ofMap(backgroundLevel, 0.0, 255.0, bRed, 255.0);
-    float top_g = ofMap(backgroundLevel, 0.0, 255.0, bGreen, 255.0);
-    float top_b = ofMap(backgroundLevel, 0.0, 255.0, bBlue, 255.0);
+    level1 = ofMap(contourFinder.nBlobs, 0.0, 20.0, level1, 255.0);
+    level2 = ofMap(contourFinder1.nBlobs, 0.0, 20.0, level2, 255.0);
+
+    
+    float top_r = ofMap(level1, 0.0, 255.0, bRed, 255.0);
+    float top_g = ofMap(level1, 0.0, 255.0, bGreen, 255.0);
+    float top_b = ofMap(level1, 0.0, 255.0, bBlue, 255.0);
+    
+    float top2_r = ofMap(level2, 0.0, 255.0, bRed, 255.0);
+    float top2_g = ofMap(level2, 0.0, 255.0, bGreen, 255.0);
+    float top2_b = ofMap(level2, 0.0, 255.0, bBlue, 255.0);
     
     ofColor bleh = ofColor(255.0, 0.0, 255.0);
     
@@ -621,13 +632,13 @@ void ofApp::sendToDMX() {
     c2.g = ofMap(newGauss2, 245.0, 255.0, top_g, bleh.g);
     c2.b = ofMap(newGauss2, 245.0, 255.0, top_b, bleh.b);
     
-    c3.r = ofMap(newGauss3, 245.0, 255.0, top_r, bleh.r);
-    c3.g = ofMap(newGauss3, 245.0, 255.0, top_g, bleh.g);
-    c3.b = ofMap(newGauss3, 245.0, 255.0, top_b, bleh.b);
+    c3.r = ofMap(newGauss3, 245.0, 255.0, top2_r, bleh.r);
+    c3.g = ofMap(newGauss3, 245.0, 255.0, top2_g, bleh.g);
+    c3.b = ofMap(newGauss3, 245.0, 255.0, top2_b, bleh.b);
     
-    c4.r = ofMap(newGauss4, 245.0, 255.0, top_r, bleh.r);
-    c4.g = ofMap(newGauss4, 245.0, 255.0, top_g, bleh.g);
-    c4.b = ofMap(newGauss4, 245.0, 255.0, top_b, bleh.b);
+    c4.r = ofMap(newGauss4, 245.0, 255.0, top2_r, bleh.r);
+    c4.g = ofMap(newGauss4, 245.0, 255.0, top2_g, bleh.g);
+    c4.b = ofMap(newGauss4, 245.0, 255.0, top2_b, bleh.b);
     
     dmxData_[1] = int(c.r);
     dmxData_[2] = int(c.g);
