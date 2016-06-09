@@ -49,6 +49,9 @@ bool                    drawOne;
 int timeToReset = 20000;
 float lastTime = 0.0;
 
+float camera1BackgroundLevel = 0.0;
+float camera2BackgroundLevel = 0.0;
+
 void ofApp::setup() {
     
     ofEnableSmoothing();
@@ -237,6 +240,13 @@ void ofApp::update() {
         grayDiff.absDiff(grayBg, grayImage);
         grayDiff.threshold(threshold);
         contourFinder.findContours(grayDiff, 20, (340*240)/3, 10, true);
+        
+        
+        if (contourFinder.nBlobs > 0) {
+            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel+=5.0, 0.0, 250.0);
+        } else {
+            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel-=5.0, 0.0, 250.0);
+        }
     }
     
     if (bNewFrame1){
@@ -251,6 +261,15 @@ void ofApp::update() {
         grayDiff1.absDiff(grayBg1, grayImage1);
         grayDiff1.threshold(threshold);
         contourFinder1.findContours(grayDiff1, 20, (340*240)/3, 10, true);
+        
+        if (contourFinder1.nBlobs > 0) {
+            camera2BackgroundLevel = ofClamp(camera1BackgroundLevel+=5.0, 0.0, 250.0);
+        } else {
+            camera2BackgroundLevel = ofClamp(camera1BackgroundLevel-=5.0, 0.0, 250.0);
+        }
+        cout << camera1BackgroundLevel << endl;
+        cout << camera2BackgroundLevel << endl;
+
     }
     
     switch (ANIMATION_STATE) {
@@ -596,18 +615,15 @@ void ofApp::sendToDMX() {
     float in4 = ofMap(inRes4, -2000.0, -40.0, 0.0, 1280.0);
     int inInt4 = (int) in4;
     int gauss4 = gaussianBottom[inInt4];
-    
-    level1 = ofMap(contourFinder.nBlobs, 0.0, 20.0, level1, 255.0);
-    level2 = ofMap(contourFinder1.nBlobs, 0.0, 20.0, level2, 255.0);
 
     
-    float top_r = ofMap(level1, 0.0, 255.0, bRed, 255.0);
-    float top_g = ofMap(level1, 0.0, 255.0, bGreen, 255.0);
-    float top_b = ofMap(level1, 0.0, 255.0, bBlue, 255.0);
+    float top_r = ofMap(camera1BackgroundLevel, 0.0, 255.0, bRed, 255.0);
+    float top_g = ofMap(camera1BackgroundLevel, 0.0, 255.0, bGreen, 255.0);
+    float top_b = ofMap(camera1BackgroundLevel, 0.0, 255.0, bBlue, 255.0);
     
-    float top2_r = ofMap(level2, 0.0, 255.0, bRed, 255.0);
-    float top2_g = ofMap(level2, 0.0, 255.0, bGreen, 255.0);
-    float top2_b = ofMap(level2, 0.0, 255.0, bBlue, 255.0);
+    float top2_r = ofMap(camera2BackgroundLevel, 0.0, 255.0, bRed, 255.0);
+    float top2_g = ofMap(camera2BackgroundLevel, 0.0, 255.0, bGreen, 255.0);
+    float top2_b = ofMap(camera2BackgroundLevel, 0.0, 255.0, bBlue, 255.0);
     
     ofColor bleh = ofColor(255.0, 0.0, 255.0);
     
@@ -682,17 +698,17 @@ void ofApp::newDrawRegion(float gaussLevels[1280], int start, int end, bool isEv
             float backgroundLevelRef = backgroundLevel;
             if (reg == "region1") {
                 if (ring == "ring10" || ring == "ring9") {
-                    backgroundLevel = ofMap(contourFinder.nBlobs, 0.0, 20.0, backgroundLevel, 255.0);
+                    backgroundLevelRef = camera1BackgroundLevel;
                 } else if (ring == "ring10" || ring == "ring9") {
-                    backgroundLevel = ofMap(contourFinder1.nBlobs, 0.0, 20.0, backgroundLevel, 255.0);
+                    backgroundLevelRef = camera2BackgroundLevel;
                 }
             }
 
             ofColor c;
 
-            float top_r = ofMap(backgroundLevel, 0.0, 255.0, bRed, 255.0);
-            float top_g = ofMap(backgroundLevel, 0.0, 255.0, bGreen, 255.0);
-            float top_b = ofMap(backgroundLevel, 0.0, 255.0, bBlue, 255.0);
+            float top_r = ofMap(backgroundLevelRef, 0.0, 255.0, bRed, 255.0);
+            float top_g = ofMap(backgroundLevelRef, 0.0, 255.0, bGreen, 255.0);
+            float top_b = ofMap(backgroundLevelRef, 0.0, 255.0, bBlue, 255.0);
 
             ofColor bleh = ofColor(255.0, 0.0, 255.0);
             
@@ -715,8 +731,6 @@ void ofApp::newDrawRegion(float gaussLevels[1280], int start, int end, bool isEv
             }
             line.addVertex(result[reg][ring]["point0"][0].asFloat(), result[reg][ring]["point0"][1].asFloat(),result[reg][ring]["point0"][2].asFloat());
             line.draw();
-            backgroundLevel = backgroundLevelRef;
-
         }
     }
 }
