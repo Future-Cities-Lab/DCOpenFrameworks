@@ -117,13 +117,13 @@ void ofApp::setup() {
     }
     
 
-    vidGrabber.setDeviceID(pcCams[0]);
-//    vidGrabber.setDeviceID(0);
+//    vidGrabber.setDeviceID(pcCams[0]);
+    vidGrabber.setDeviceID(0);
 
     vidGrabber.initGrabber(320,240);
     
-    vidGrabber1.setDeviceID(pcCams[1]);
-//    vidGrabber1.setDeviceID(0);
+//    vidGrabber1.setDeviceID(pcCams[1]);
+    vidGrabber1.setDeviceID(0);
 
     vidGrabber1.initGrabber(320,240);
     
@@ -699,7 +699,7 @@ void ofApp::newDrawRegion(float gaussLevels[1280], int start, int end, bool isEv
             if (reg == "region1") {
                 if (ring == "ring10" || ring == "ring9") {
                     backgroundLevelRef = camera1BackgroundLevel;
-                } else if (ring == "ring10" || ring == "ring9") {
+                } else if (ring == "ring8" || ring == "ring7") {
                     backgroundLevelRef = camera2BackgroundLevel;
                 }
             }
