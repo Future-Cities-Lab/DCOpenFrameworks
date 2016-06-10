@@ -243,9 +243,11 @@ void ofApp::update() {
         
         
         if (contourFinder.nBlobs > 0) {
-            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel+=5.0, 0.0, 255.0);
+            camera1BackgroundLevel+=5.0;
+            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
         } else {
-            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel-=5.0, 0.0, 255.0);
+            camera1BackgroundLevel-=5.0;
+            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
         }
     }
     
@@ -263,12 +265,14 @@ void ofApp::update() {
         contourFinder1.findContours(grayDiff1, 20, (340*240)/3, 10, true);
         
         if (contourFinder1.nBlobs > 0) {
-            camera2BackgroundLevel = ofClamp(camera1BackgroundLevel+=5.0, 0.0, 250.0);
+            camera2BackgroundLevel+=5.0;
+            camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
         } else {
-            camera2BackgroundLevel = ofClamp(camera1BackgroundLevel-=5.0, 0.0, 250.0);
+            camera2BackgroundLevel-=5.0;
+            camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
         }
-        cout << camera1BackgroundLevel << endl;
-        cout << camera2BackgroundLevel << endl;
+//        cout << camera1BackgroundLevel << endl;
+//        cout << camera2BackgroundLevel << endl;
 
     }
     
@@ -709,6 +713,17 @@ void ofApp::newDrawRegion(float gaussLevels[1280], int start, int end, bool isEv
             float top_r = ofMap(backgroundLevelRef, 0.0, 255.0, bRed, 255.0);
             float top_g = ofMap(backgroundLevelRef, 0.0, 255.0, bGreen, 255.0);
             float top_b = ofMap(backgroundLevelRef, 0.0, 255.0, bBlue, 255.0);
+            
+//            if (reg == "region1") {
+//                if (ring == "ring10" || ring == "ring9" || ring == "ring8" || ring == "ring7") {
+//                    cout << "bbackgroundLevelRef = " << endl;
+//                    cout << backgroundLevelRef << endl;
+//                    cout << top_r << endl;
+//                    cout << top_g << endl;
+//                    cout << top_b << endl;
+//                    cout << "" << endl;
+//                }
+//            }
 
             ofColor bleh = ofColor(255.0, 0.0, 255.0);
             
