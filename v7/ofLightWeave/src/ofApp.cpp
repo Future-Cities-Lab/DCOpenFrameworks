@@ -694,11 +694,11 @@ void ofApp::sendToDMX() {
     dmxData_[8] = int(c3.g);
     dmxData_[9] = int(c3.b);
 
-    dmxData_[10] = int(c4.r);
-    dmxData_[11] = int(c4.g);
-    dmxData_[12] = int(c4.b);
+//    dmxData_[10] = int(c4.r);
+//    dmxData_[11] = int(c4.g);
+//    dmxData_[12] = int(c4.b);
     
-    for (int i = 13; i <= 118; i+=3) {
+    for (int i = 10; i <= 112; i+=3) {
         dmxData_[i] = int(newC.r);
         dmxData_[i+1] = int(newC.g);
         dmxData_[i+2] = int(newC.b);
