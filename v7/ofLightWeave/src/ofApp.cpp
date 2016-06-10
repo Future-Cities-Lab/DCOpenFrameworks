@@ -698,21 +698,27 @@ void ofApp::sendToDMX() {
     dmxData_[11] = int(c4.g);
     dmxData_[12] = int(c4.b);
     
-    dmxData_[13] = int(newC.r);
-    dmxData_[14] = int(newC.g);
-    dmxData_[15] = int(newC.b);
+    for (int i = 13; i <= 118; i+=3) {
+        dmxData_[i] = int(newC.r);
+        dmxData_[i+1] = int(newC.g);
+        dmxData_[i+2] = int(newC.b);
+    }
     
-    dmxData_[16] = int(newC.r);
-    dmxData_[17] = int(newC.g);
-    dmxData_[18] = int(newC.b);
-    
-    dmxData_[19] = int(newC.r);
-    dmxData_[20] = int(newC.g);
-    dmxData_[21] = int(newC.b);
-    
-    dmxData_[22] = int(newC.r);
-    dmxData_[23] = int(newC.g);
-    dmxData_[24] = int(newC.b);
+//    dmxData_[13] = int(newC.r);
+//    dmxData_[14] = int(newC.g);
+//    dmxData_[15] = int(newC.b);
+//    
+//    dmxData_[16] = int(newC.r);
+//    dmxData_[17] = int(newC.g);
+//    dmxData_[18] = int(newC.b);
+//    
+//    dmxData_[19] = int(newC.r);
+//    dmxData_[20] = int(newC.g);
+//    dmxData_[21] = int(newC.b);
+//    
+//    dmxData_[22] = int(newC.r);
+//    dmxData_[23] = int(newC.g);
+//    dmxData_[24] = int(newC.b);
     
     
     dmxData_[0] = 0;
