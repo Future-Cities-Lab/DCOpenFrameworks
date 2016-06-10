@@ -243,10 +243,10 @@ void ofApp::update() {
         
         
         if (contourFinder.nBlobs > 0) {
-            camera1BackgroundLevel+=5.0;
+            camera1BackgroundLevel+=15.0;
             camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
         } else {
-            camera1BackgroundLevel-=5.0;
+            camera1BackgroundLevel-=15.0;
             camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
         }
     }
@@ -265,10 +265,10 @@ void ofApp::update() {
         contourFinder1.findContours(grayDiff1, 20, (340*240)/3, 10, true);
         
         if (contourFinder1.nBlobs > 0) {
-            camera2BackgroundLevel+=5.0;
+            camera2BackgroundLevel+=15.0;
             camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
         } else {
-            camera2BackgroundLevel-=5.0;
+            camera2BackgroundLevel-=15.0;
             camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
         }
 //        cout << camera1BackgroundLevel << endl;
@@ -621,13 +621,13 @@ void ofApp::sendToDMX() {
     int gauss4 = gaussianBottom[inInt4];
 
     
-    float top_r = ofMap(camera1BackgroundLevel, 0.0, 255.0, bRed*.5, 255.0);
-    float top_g = ofMap(camera1BackgroundLevel, 0.0, 255.0, bGreen*.5, 255.0);
-    float top_b = ofMap(camera1BackgroundLevel, 0.0, 255.0, bBlue*.5, 255.0);
+    float top_r = ofMap(camera1BackgroundLevel, 0.0, 255.0, bRed*.25, 255.0);
+    float top_g = ofMap(camera1BackgroundLevel, 0.0, 255.0, bGreen*.25, 255.0);
+    float top_b = ofMap(camera1BackgroundLevel, 0.0, 255.0, bBlue*.25, 255.0);
     
-    float top2_r = ofMap(camera2BackgroundLevel, 0.0, 255.0, bRed*.5, 255.0);
-    float top2_g = ofMap(camera2BackgroundLevel, 0.0, 255.0, bGreen*.5, 255.0);
-    float top2_b = ofMap(camera2BackgroundLevel, 0.0, 255.0, bBlue*.5, 255.0);
+    float top2_r = ofMap(camera2BackgroundLevel, 0.0, 255.0, bRed*.25, 255.0);
+    float top2_g = ofMap(camera2BackgroundLevel, 0.0, 255.0, bGreen*.25, 255.0);
+    float top2_b = ofMap(camera2BackgroundLevel, 0.0, 255.0, bBlue*.25, 255.0);
     
     ofColor bleh = ofColor(255.0, 0.0, 255.0);
     
@@ -644,21 +644,21 @@ void ofApp::sendToDMX() {
     float newGauss4 = ofClamp(gauss4, 245.0, 255.0);
     
     
-    c.r = ofMap(newGauss, 245.0, 255.0, top_r, bleh.r);
-    c.g = ofMap(newGauss, 245.0, 255.0, top_g, bleh.g);
-    c.b = ofMap(newGauss, 245.0, 255.0, top_b, bleh.b);
+    c.r = ofMap(newGauss, 245.0, 255.0, top2_r, bleh.r);
+    c.g = ofMap(newGauss, 245.0, 255.0, top2_g, bleh.g);
+    c.b = ofMap(newGauss, 245.0, 255.0, top2_b, bleh.b);
     
-    c2.r = ofMap(newGauss2, 245.0, 255.0, top_r, bleh.r);
-    c2.g = ofMap(newGauss2, 245.0, 255.0, top_g, bleh.g);
-    c2.b = ofMap(newGauss2, 245.0, 255.0, top_b, bleh.b);
+    c2.r = ofMap(newGauss2, 245.0, 255.0, top2_r, bleh.r);
+    c2.g = ofMap(newGauss2, 245.0, 255.0, top2_g, bleh.g);
+    c2.b = ofMap(newGauss2, 245.0, 255.0, top2_b, bleh.b);
     
-    c3.r = ofMap(newGauss3, 245.0, 255.0, top2_r, bleh.r);
-    c3.g = ofMap(newGauss3, 245.0, 255.0, top2_g, bleh.g);
-    c3.b = ofMap(newGauss3, 245.0, 255.0, top2_b, bleh.b);
+    c3.r = ofMap(newGauss3, 245.0, 255.0, top_r, bleh.r);
+    c3.g = ofMap(newGauss3, 245.0, 255.0, top_g, bleh.g);
+    c3.b = ofMap(newGauss3, 245.0, 255.0, top_b, bleh.b);
     
-    c4.r = ofMap(newGauss4, 245.0, 255.0, top2_r, bleh.r);
-    c4.g = ofMap(newGauss4, 245.0, 255.0, top2_g, bleh.g);
-    c4.b = ofMap(newGauss4, 245.0, 255.0, top2_b, bleh.b);
+    c4.r = ofMap(newGauss4, 245.0, 255.0, top_r, bleh.r);
+    c4.g = ofMap(newGauss4, 245.0, 255.0, top_g, bleh.g);
+    c4.b = ofMap(newGauss4, 245.0, 255.0, top_b, bleh.b);
     
     dmxData_[1] = int(c.r);
     dmxData_[2] = int(c.g);
@@ -710,9 +710,9 @@ void ofApp::newDrawRegion(float gaussLevels[1280], int start, int end, bool isEv
 
             ofColor c;
 
-            float top_r = ofMap(backgroundLevelRef, 0.0, 255.0, bRed*.5, 255.0);
-            float top_g = ofMap(backgroundLevelRef, 0.0, 255.0, bGreen*.5, 255.0);
-            float top_b = ofMap(backgroundLevelRef, 0.0, 255.0, bBlue*.5, 255.0);
+            float top_r = ofMap(backgroundLevelRef, 0.0, 255.0, bRed*.25, 255.0);
+            float top_g = ofMap(backgroundLevelRef, 0.0, 255.0, bGreen*.25, 255.0);
+            float top_b = ofMap(backgroundLevelRef, 0.0, 255.0, bBlue*.25, 255.0);
             
 //            if (reg == "region1") {
 //                if (ring == "ring10" || ring == "ring9" || ring == "ring8" || ring == "ring7") {
