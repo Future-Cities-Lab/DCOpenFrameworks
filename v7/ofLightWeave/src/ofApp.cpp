@@ -123,13 +123,13 @@ void ofApp::setup() {
     }
     
 
-    vidGrabber.setDeviceID(pcCams[0]);
-//    vidGrabber.setDeviceID(0);
+//    vidGrabber.setDeviceID(pcCams[0]);
+    vidGrabber.setDeviceID(0);
 
     vidGrabber.initGrabber(320,240);
     
-    vidGrabber1.setDeviceID(pcCams[1]);
-//    vidGrabber1.setDeviceID(0);
+//    vidGrabber1.setDeviceID(pcCams[1]);
+    vidGrabber1.setDeviceID(0);
 
     vidGrabber1.initGrabber(320,240);
     
@@ -260,12 +260,13 @@ void ofApp::update() {
         if (hasLargeEnoughArea) {
             // CHECK BLOB #
             if (contourFinder.nBlobs >= numBlobsNeeded) {
-                camera1BackgroundLevel+=15.0;
-                camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
-            } else {
-                camera1BackgroundLevel-=15.0;
+                camera1BackgroundLevel += 15.0;
                 camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
             }
+        }
+        if (contourFinder.nBlobs == 0) {
+            camera1BackgroundLevel -= 15.0;
+            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
         }
     }
     
@@ -294,10 +295,11 @@ void ofApp::update() {
             if (contourFinder1.nBlobs >= numBlobsNeeded) {
                 camera2BackgroundLevel+=15.0;
                 camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
-            } else {
-                camera2BackgroundLevel-=15.0;
-                camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
             }
+        }
+        if (contourFinder1.nBlobs == 0) {
+            camera2BackgroundLevel-=15.0;
+            camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
         }
 
     }
