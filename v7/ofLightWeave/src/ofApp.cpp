@@ -680,6 +680,8 @@ void ofApp::sendToDMX() {
     c4.g = ofMap(newGauss4, 245.0, 255.0, top_g, bleh.g);
     c4.b = ofMap(newGauss4, 245.0, 255.0, top_b, bleh.b);
     
+    ofColor newC = ofColor(255, 0, 0);
+    
     dmxData_[1] = int(c.r);
     dmxData_[2] = int(c.g);
     dmxData_[3] = int(c.b);
@@ -695,6 +697,24 @@ void ofApp::sendToDMX() {
     dmxData_[10] = int(c4.r);
     dmxData_[11] = int(c4.g);
     dmxData_[12] = int(c4.b);
+    
+    dmxData_[13] = int(newC.r);
+    dmxData_[14] = int(newC.g);
+    dmxData_[15] = int(newC.b);
+    
+    dmxData_[16] = int(newC.r);
+    dmxData_[17] = int(newC.g);
+    dmxData_[18] = int(newC.b);
+    
+    dmxData_[19] = int(newC.r);
+    dmxData_[20] = int(newC.g);
+    dmxData_[21] = int(newC.b);
+    
+    dmxData_[22] = int(newC.r);
+    dmxData_[23] = int(newC.g);
+    dmxData_[24] = int(newC.b);
+    
+    
     dmxData_[0] = 0;
 
     if (!dmxInterface_ || !dmxInterface_->isOpen()) {
