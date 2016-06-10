@@ -53,6 +53,10 @@ float camera1BackgroundLevel = 0.0;
 float camera2BackgroundLevel = 0.0;
 
 int numBlobsNeeded = 3;
+float minBlobArea = 800.0;
+int previousBlobCount1 = 0;
+int previousBlobCount2 = 0;
+
 
 void ofApp::setup() {
     
@@ -230,7 +234,7 @@ void ofApp::update() {
     vidGrabber1.update();
     bNewFrame1 = vidGrabber.isFrameNew();
     
-    if (bNewFrame){
+    if (bNewFrame) {
         
         colorImg.setFromPixels(vidGrabber.getPixels(), 320,240);
         
@@ -244,12 +248,24 @@ void ofApp::update() {
         contourFinder.findContours(grayDiff, 20, (340*240)/3, 10, true);
         
         
-        if (contourFinder.nBlobs >= numBlobsNeeded) {
-            camera1BackgroundLevel+=15.0;
-            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
-        } else {
-            camera1BackgroundLevel-=15.0;
-            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
+        // CHECK AREA
+        bool hasLargeEnoughArea = false;
+        for (int i = 0; i < contourFinder.nBlobs; i++) {
+            if (contourFinder.blobs[i].area >= minBlobArea) {
+                hasLargeEnoughArea = true;
+                break;
+            }
+        }
+        
+        if (hasLargeEnoughArea) {
+            // CHECK BLOB #
+            if (contourFinder.nBlobs >= numBlobsNeeded) {
+                camera1BackgroundLevel+=15.0;
+                camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
+            } else {
+                camera1BackgroundLevel-=15.0;
+                camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
+            }
         }
     }
     
@@ -266,15 +282,23 @@ void ofApp::update() {
         grayDiff1.threshold(threshold);
         contourFinder1.findContours(grayDiff1, 20, (340*240)/3, 10, true);
         
-        if (contourFinder1.nBlobs >= numBlobsNeeded) {
-            camera2BackgroundLevel+=15.0;
-            camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
-        } else {
-            camera2BackgroundLevel-=15.0;
-            camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
+        bool hasLargeEnoughArea = false;
+        for (int i = 0; i < contourFinder1.nBlobs; i++) {
+            if (contourFinder1.blobs[i].area >= minBlobArea) {
+                hasLargeEnoughArea = true;
+                break;
+            }
         }
-//        cout << camera1BackgroundLevel << endl;
-//        cout << camera2BackgroundLevel << endl;
+        
+        if (hasLargeEnoughArea) {
+            if (contourFinder1.nBlobs >= numBlobsNeeded) {
+                camera2BackgroundLevel+=15.0;
+                camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
+            } else {
+                camera2BackgroundLevel-=15.0;
+                camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
+            }
+        }
 
     }
     
@@ -470,16 +494,14 @@ void ofApp::draw() {
         ofDrawLine(578, 150+(2*(240/3)), 578+340, 150+(2*(240/3)));
 
         
-        for (int i = 0; i < contourFinder.nBlobs; i++){
-            contourFinder.blobs[i].draw(238, 150);
-            
-            ofSetColor(255);
-            if(contourFinder.blobs[i].hole){
-                ofDrawBitmapString("hole",
-                                   contourFinder.blobs[i].boundingRect.getCenter().x + 360,
-                                   contourFinder.blobs[i].boundingRect.getCenter().y + 540);
+        for (int i = 0; i < contourFinder.nBlobs; i++) {
+            if (contourFinder.blobs[i].area >= minBlobArea) {
+                if (contourFinder.blobs[i].centroid.x < 60 || contourFinder.blobs[i].centroid.x > 120) {
+                    contourFinder.blobs[i].draw(238, 150);
+                }
             }
         }
+        
         ofNoFill();
         ofSetColor(cameraColor1);
         ofDrawBitmapString("Camera 5", 238, 140);
@@ -488,15 +510,9 @@ void ofApp::draw() {
         colorImg.draw(238, 150);
 
         
-        for (int i = 0; i < contourFinder1.nBlobs; i++){
-            contourFinder1.blobs[i].draw(578, 150);
-            
-            // draw over the centroid if the blob is a hole
-            ofSetColor(255);
-            if(contourFinder1.blobs[i].hole){
-                ofDrawBitmapString("hole",
-                                   contourFinder1.blobs[i].boundingRect.getCenter().x + 360,
-                                   contourFinder1.blobs[i].boundingRect.getCenter().y + 540);
+        for (int i = 0; i < contourFinder1.nBlobs; i++) {
+            if (contourFinder1.blobs[i].centroid.x < 60 || contourFinder1.blobs[i].centroid.x > 120) {
+                contourFinder1.blobs[i].draw(578, 150);
             }
         }
 
@@ -716,16 +732,6 @@ void ofApp::newDrawRegion(float gaussLevels[1280], int start, int end, bool isEv
             float top_g = ofMap(backgroundLevelRef, 0.0, 255.0, bGreen*.25, 255.0);
             float top_b = ofMap(backgroundLevelRef, 0.0, 255.0, bBlue*.25, 255.0);
             
-//            if (reg == "region1") {
-//                if (ring == "ring10" || ring == "ring9" || ring == "ring8" || ring == "ring7") {
-//                    cout << "bbackgroundLevelRef = " << endl;
-//                    cout << backgroundLevelRef << endl;
-//                    cout << top_r << endl;
-//                    cout << top_g << endl;
-//                    cout << top_b << endl;
-//                    cout << "" << endl;
-//                }
-//            }
 
             ofColor bleh = ofColor(255.0, 0.0, 255.0);
             
@@ -849,7 +855,10 @@ void ofApp::windowResized(int w, int h) {}
 void ofApp::gotMessage(ofMessage msg) {}
 void ofApp::dragEvent(ofDragInfo dragInfo) {}
 void ofApp::keyReleased(int key) {}
-void ofApp::mouseMoved(int x, int y ) {}
+void ofApp::mouseMoved(int x, int y ) {
+    cout << x << endl;
+    cout << y << endl;
+}
 void ofApp::mouseDragged(int x, int y, int button) {}
 void ofApp::mousePressed(int x, int y, int button) {}
 void ofApp::mouseReleased(int x, int y, int button) {}
