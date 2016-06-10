@@ -117,13 +117,13 @@ void ofApp::setup() {
     }
     
 
-//    vidGrabber.setDeviceID(pcCams[0]);
-    vidGrabber.setDeviceID(0);
+    vidGrabber.setDeviceID(pcCams[0]);
+//    vidGrabber.setDeviceID(0);
 
     vidGrabber.initGrabber(320,240);
     
-//    vidGrabber1.setDeviceID(pcCams[1]);
-    vidGrabber1.setDeviceID(0);
+    vidGrabber1.setDeviceID(pcCams[1]);
+//    vidGrabber1.setDeviceID(0);
 
     vidGrabber1.initGrabber(320,240);
     
@@ -243,9 +243,9 @@ void ofApp::update() {
         
         
         if (contourFinder.nBlobs > 0) {
-            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel+=5.0, 0.0, 250.0);
+            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel+=5.0, 0.0, 255.0);
         } else {
-            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel-=5.0, 0.0, 250.0);
+            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel-=5.0, 0.0, 255.0);
         }
     }
     
