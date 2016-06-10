@@ -621,13 +621,13 @@ void ofApp::sendToDMX() {
     int gauss4 = gaussianBottom[inInt4];
 
     
-    float top_r = ofMap(camera1BackgroundLevel, 0.0, 255.0, bRed, 255.0);
-    float top_g = ofMap(camera1BackgroundLevel, 0.0, 255.0, bGreen, 255.0);
-    float top_b = ofMap(camera1BackgroundLevel, 0.0, 255.0, bBlue, 255.0);
+    float top_r = ofMap(camera1BackgroundLevel, 0.0, 255.0, bRed*.5, 255.0);
+    float top_g = ofMap(camera1BackgroundLevel, 0.0, 255.0, bGreen*.5, 255.0);
+    float top_b = ofMap(camera1BackgroundLevel, 0.0, 255.0, bBlue*.5, 255.0);
     
-    float top2_r = ofMap(camera2BackgroundLevel, 0.0, 255.0, bRed, 255.0);
-    float top2_g = ofMap(camera2BackgroundLevel, 0.0, 255.0, bGreen, 255.0);
-    float top2_b = ofMap(camera2BackgroundLevel, 0.0, 255.0, bBlue, 255.0);
+    float top2_r = ofMap(camera2BackgroundLevel, 0.0, 255.0, bRed*.5, 255.0);
+    float top2_g = ofMap(camera2BackgroundLevel, 0.0, 255.0, bGreen*.5, 255.0);
+    float top2_b = ofMap(camera2BackgroundLevel, 0.0, 255.0, bBlue*.5, 255.0);
     
     ofColor bleh = ofColor(255.0, 0.0, 255.0);
     
@@ -710,9 +710,9 @@ void ofApp::newDrawRegion(float gaussLevels[1280], int start, int end, bool isEv
 
             ofColor c;
 
-            float top_r = ofMap(backgroundLevelRef, 0.0, 255.0, bRed, 255.0);
-            float top_g = ofMap(backgroundLevelRef, 0.0, 255.0, bGreen, 255.0);
-            float top_b = ofMap(backgroundLevelRef, 0.0, 255.0, bBlue, 255.0);
+            float top_r = ofMap(backgroundLevelRef, 0.0, 255.0, bRed*.5, 255.0);
+            float top_g = ofMap(backgroundLevelRef, 0.0, 255.0, bGreen*.5, 255.0);
+            float top_b = ofMap(backgroundLevelRef, 0.0, 255.0, bBlue*.5, 255.0);
             
 //            if (reg == "region1") {
 //                if (ring == "ring10" || ring == "ring9" || ring == "ring8" || ring == "ring7") {
