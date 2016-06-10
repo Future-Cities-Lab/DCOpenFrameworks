@@ -52,6 +52,8 @@ float lastTime = 0.0;
 float camera1BackgroundLevel = 0.0;
 float camera2BackgroundLevel = 0.0;
 
+int numBlobsNeeded = 3;
+
 void ofApp::setup() {
     
     ofEnableSmoothing();
@@ -242,7 +244,7 @@ void ofApp::update() {
         contourFinder.findContours(grayDiff, 20, (340*240)/3, 10, true);
         
         
-        if (contourFinder.nBlobs > 0) {
+        if (contourFinder.nBlobs >= numBlobsNeeded) {
             camera1BackgroundLevel+=15.0;
             camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
         } else {
@@ -264,7 +266,7 @@ void ofApp::update() {
         grayDiff1.threshold(threshold);
         contourFinder1.findContours(grayDiff1, 20, (340*240)/3, 10, true);
         
-        if (contourFinder1.nBlobs > 0) {
+        if (contourFinder1.nBlobs >= numBlobsNeeded) {
             camera2BackgroundLevel+=15.0;
             camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
         } else {
