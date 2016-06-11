@@ -40,9 +40,14 @@ class ofApp : public ofBaseApp{
 
     
         /* SWARM CODE */
-        float bRed = 135.0;
-        float bGreen = 206.0;
-        float bBlue = 250.0;
+//        float bRed = 135.0;
+//        float bGreen = 206.0;
+//        float bBlue = 250.0;
+    
+        float bRed = 255.0;
+        float bGreen = 215.0;
+        float bBlue = 0.0;
+    
         ofColor backgroundColor = ofColor(135.0, 206.0, 250.0);
         float backgroundLevel = 0.0;
         bool backgroundGrowing = true;
