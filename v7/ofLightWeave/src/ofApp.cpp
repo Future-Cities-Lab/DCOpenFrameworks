@@ -123,13 +123,13 @@ void ofApp::setup() {
     }
     
 
-//    vidGrabber.setDeviceID(pcCams[0]);
-    vidGrabber.setDeviceID(0);
+    vidGrabber.setDeviceID(pcCams[0]);
+//    vidGrabber.setDeviceID(0);
 
     vidGrabber.initGrabber(320,240);
     
-//    vidGrabber1.setDeviceID(pcCams[1]);
-    vidGrabber1.setDeviceID(0);
+    vidGrabber1.setDeviceID(pcCams[1]);
+//    vidGrabber1.setDeviceID(0);
 
     vidGrabber1.initGrabber(320,240);
     
@@ -699,9 +699,9 @@ void ofApp::sendToDMX() {
 //    dmxData_[12] = int(c4.b);
     
     for (int i = 10; i <= 112; i+=3) {
-        dmxData_[i] = int(newC.r);
-        dmxData_[i+1] = int(newC.g);
-        dmxData_[i+2] = int(newC.b);
+        dmxData_[i] = int(c4.r);
+        dmxData_[i+1] = int(c4.g);
+        dmxData_[i+2] = int(c4.b);
     }
     
 //    dmxData_[13] = int(newC.r);
