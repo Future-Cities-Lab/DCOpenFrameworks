@@ -45,7 +45,7 @@ class ofApp : public ofBaseApp{
 //        float bBlue = 250.0;
     
         float bRed = 255.0;
-        float bGreen = 215.0;
+        float bGreen = 155.0;
         float bBlue = 0.0;
     
         ofColor backgroundColor = ofColor(135.0, 206.0, 250.0);
