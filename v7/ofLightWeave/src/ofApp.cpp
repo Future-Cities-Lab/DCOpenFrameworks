@@ -57,6 +57,10 @@ float minBlobArea = 800.0;
 int previousBlobCount1 = 0;
 int previousBlobCount2 = 0;
 
+float avgYPosOfBlobs = 0.0;
+
+float slidePosition = 0.0;
+
 
 void ofApp::setup() {
     
@@ -512,11 +516,15 @@ void ofApp::draw() {
         colorImg.draw(238, 150);
 
         
+        avgYPosOfBlobs = 0.0;
         for (int i = 0; i < contourFinder1.nBlobs; i++) {
+            avgYPosOfBlobs += contourFinder1.blobs[i].centroid.y;
+            
             if (contourFinder1.blobs[i].centroid.x < 60 || contourFinder1.blobs[i].centroid.x > 120) {
                 contourFinder1.blobs[i].draw(578, 150);
             }
         }
+        avgYPosOfBlobs /= contourFinder1.nBlobs;
 
         ofNoFill();
         ofSetColor(cameraColor2);
@@ -697,11 +705,29 @@ void ofApp::sendToDMX() {
 //    dmxData_[10] = int(c4.r);
 //    dmxData_[11] = int(c4.g);
 //    dmxData_[12] = int(c4.b);
-    
     for (int i = 10; i <= 112; i+=3) {
         dmxData_[i] = int(c4.r);
         dmxData_[i+1] = int(c4.g);
         dmxData_[i+2] = int(c4.b);
+    }
+    
+    if (contourFinder.nBlobs > 0) {
+        slidePosition+=1.0;
+        if (slidePosition >= 100.0) {
+            slidePosition = 0.0;
+        }
+        int channel = ofMap(slidePosition, 0.0, 100.0, 0, 34);
+        int channelPositionInDMX = 10 + (3*channel);
+
+//        cout << channelPositionInDMX+0 << endl;
+//        cout << channelPositionInDMX+1 << endl;
+//        cout << channelPositionInDMX+2 << endl;
+//        cout << "" << endl;
+        dmxData_[channelPositionInDMX+0] = int(c4.r);
+        dmxData_[channelPositionInDMX+1] = int(c4.g);
+        dmxData_[channelPositionInDMX+2] = int(c4.b);
+    
+
     }
     
 //    dmxData_[13] = int(newC.r);
@@ -884,8 +910,8 @@ void ofApp::gotMessage(ofMessage msg) {}
 void ofApp::dragEvent(ofDragInfo dragInfo) {}
 void ofApp::keyReleased(int key) {}
 void ofApp::mouseMoved(int x, int y ) {
-    cout << x << endl;
-    cout << y << endl;
+//    cout << x << endl;
+//    cout << y << endl;
 }
 void ofApp::mouseDragged(int x, int y, int button) {}
 void ofApp::mousePressed(int x, int y, int button) {}
