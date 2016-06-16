@@ -789,7 +789,7 @@ void ofApp::sendToDMX() {
             dmxData_[i+1] = int(sideLevel);
             dmxData_[i+2] = int(sideLevel);
         }
-        sideLevel += 0.1;
+        sideLevel += 1.0;
         if (sideLevel >= 255.0) {
             sideLevel = 0.0;
             sideSection = 2;
@@ -805,7 +805,7 @@ void ofApp::sendToDMX() {
             dmxData_[i+1] = int(sideLevel);
             dmxData_[i+2] = int(sideLevel);
         }
-        sideLevel += 0.1;
+        sideLevel += 1.0;
         if (sideLevel >= 255.0) {
             sideLevel = 0.0;
             sideSection = 3;
@@ -816,7 +816,7 @@ void ofApp::sendToDMX() {
             dmxData_[i+1] = int(sideLevel);
             dmxData_[i+2] = int(sideLevel);
         }
-        sideLevel += 0.1;
+        sideLevel += 1.0;
         if (sideLevel >= 255.0) {
             sideLevel = 0.0;
             sideSection = 1;
