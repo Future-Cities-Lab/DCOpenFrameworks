@@ -61,6 +61,10 @@ float avgYPosOfBlobs = 0.0;
 
 float slidePosition = 0.0;
 
+int sideSection = 1;
+float sideLevel = 0.0;
+
+
 
 void ofApp::setup() {
     
@@ -127,13 +131,13 @@ void ofApp::setup() {
     }
     
 
-    vidGrabber.setDeviceID(pcCams[0]);
-//    vidGrabber.setDeviceID(0);
+//    vidGrabber.setDeviceID(pcCams[0]);
+    vidGrabber.setDeviceID(0);
 
     vidGrabber.initGrabber(320,240);
     
-    vidGrabber1.setDeviceID(pcCams[1]);
-//    vidGrabber1.setDeviceID(0);
+//    vidGrabber1.setDeviceID(pcCams[1]);
+    vidGrabber1.setDeviceID(0);
 
     vidGrabber1.initGrabber(320,240);
     
@@ -773,39 +777,85 @@ void ofApp::sendToDMX() {
 //    dmxData_[channelPositionInDMX2Front+1] = int(255);
 //    dmxData_[channelPositionInDMX2Front+2] = int(255);
     
-    
-    // IDEA 3
-    /* SECTION 1 */
-    for (int i = 106; i <= 106+(2*3); i+=3) {
-        dmxData_[i+0] = int(255);
-        dmxData_[i+1] = int(0);
-        dmxData_[i+2] = int(0);
+    if (sideSection == 1) {
+        for (int i = 106; i <= 106+(2*3); i+=3) {
+            dmxData_[i+0] = int(sideLevel);
+            dmxData_[i+1] = int(sideLevel);
+            dmxData_[i+2] = int(sideLevel);
+        }
+        
+        for (int i = 10; i <= 10+(8*3); i+=3) {
+            dmxData_[i+0] = int(sideLevel);
+            dmxData_[i+1] = int(sideLevel);
+            dmxData_[i+2] = int(sideLevel);
+        }
+        sideLevel += 1.0;
+        if (sideLevel >= 255.0) {
+            sideLevel = 0.0;
+        }
+        sideSection = 2;
+    } else if (sideSection == 2) {
+        for (int i = 37; i <= 37+(6*3); i+=3) {
+            dmxData_[i+0] = int(sideLevel);
+            dmxData_[i+1] = int(sideLevel);
+            dmxData_[i+2] = int(sideLevel);
+        }
+        for (int i = 82; i <= 82+(7*3); i+=3) {
+            dmxData_[i+0] = int(sideLevel);
+            dmxData_[i+1] = int(sideLevel);
+            dmxData_[i+2] = int(sideLevel);
+        }
+        sideLevel += 1.0;
+        if (sideLevel >= 255.0) {
+            sideLevel = 0.0;
+        }
+        sideSection = 3;
+    } else {
+        for (int i = 58; i <= 58+(7*3); i+=3) {
+            dmxData_[i+0] = int(sideLevel);
+            dmxData_[i+1] = int(sideLevel);
+            dmxData_[i+2] = int(sideLevel);
+        }
+        sideLevel += 1.0;
+        if (sideLevel >= 255.0) {
+            sideLevel = 0.0;
+        }
+        sideSection = 1;
     }
     
-    for (int i = 10; i <= 10+(8*3); i+=3) {
-        dmxData_[i+0] = int(255);
-        dmxData_[i+1] = int(0);
-        dmxData_[i+2] = int(0);
-    }
     
-    /* SECTION 2 */
-    for (int i = 37; i <= 37+(6*3); i+=3) {
-        dmxData_[i+0] = int(0);
-        dmxData_[i+1] = int(255);
-        dmxData_[i+2] = int(0);
-    }
-    for (int i = 82; i <= 82+(7*3); i+=3) {
-        dmxData_[i+0] = int(0);
-        dmxData_[i+1] = int(255);
-        dmxData_[i+2] = int(0);
-    }
-    
-    /* SECTION 3 */
-    for (int i = 58; i <= 58+(7*3); i+=3) {
-        dmxData_[i+0] = int(0);
-        dmxData_[i+1] = int(0);
-        dmxData_[i+2] = int(255);
-    }
+//    // IDEA 3
+//    /* SECTION 1 */
+//    for (int i = 106; i <= 106+(2*3); i+=3) {
+//        dmxData_[i+0] = int(255);
+//        dmxData_[i+1] = int(0);
+//        dmxData_[i+2] = int(0);
+//    }
+//    
+//    for (int i = 10; i <= 10+(8*3); i+=3) {
+//        dmxData_[i+0] = int(255);
+//        dmxData_[i+1] = int(0);
+//        dmxData_[i+2] = int(0);
+//    }
+//    
+//    /* SECTION 2 */
+//    for (int i = 37; i <= 37+(6*3); i+=3) {
+//        dmxData_[i+0] = int(0);
+//        dmxData_[i+1] = int(255);
+//        dmxData_[i+2] = int(0);
+//    }
+//    for (int i = 82; i <= 82+(7*3); i+=3) {
+//        dmxData_[i+0] = int(0);
+//        dmxData_[i+1] = int(255);
+//        dmxData_[i+2] = int(0);
+//    }
+//    
+//    /* SECTION 3 */
+//    for (int i = 58; i <= 58+(7*3); i+=3) {
+//        dmxData_[i+0] = int(0);
+//        dmxData_[i+1] = int(0);
+//        dmxData_[i+2] = int(255);
+//    }
     
     dmxData_[0] = 0;
 
