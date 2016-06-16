@@ -529,6 +529,17 @@ void ofApp::draw() {
             }
         }
         avgYPosOfBlobs /= contourFinder1.nBlobs;
+        
+        if (avgYPosOfBlobs >= 0 && avgYPosOfBlobs <= 238.0/3.0) {
+            sideSection = 1;
+            //cout << 1 << endl;
+        } else if (avgYPosOfBlobs > 238.0/3.0 && avgYPosOfBlobs <= (2.0*238.0)/3.0) {
+            sideSection = 2;
+            //cout << 2 << endl;
+        } else {
+            sideSection = 3;
+            //cout << 3 << endl;
+        }
 
         ofNoFill();
         ofSetColor(cameraColor2);
@@ -789,10 +800,10 @@ void ofApp::sendToDMX() {
             dmxData_[i+1] = int(sideLevel);
             dmxData_[i+2] = int(sideLevel);
         }
-        sideLevel += 1.0;
+        sideLevel += 2.0;
         if (sideLevel >= 255.0) {
             sideLevel = 0.0;
-            sideSection = 2;
+            //sideSection = 2;
         }
     } else if (sideSection == 2) {
         for (int i = 37; i <= 37+(6*3); i+=3) {
@@ -805,10 +816,10 @@ void ofApp::sendToDMX() {
             dmxData_[i+1] = int(sideLevel);
             dmxData_[i+2] = int(sideLevel);
         }
-        sideLevel += 1.0;
+        sideLevel += 2.0;
         if (sideLevel >= 255.0) {
             sideLevel = 0.0;
-            sideSection = 3;
+            //sideSection = 3;
         }
     } else {
         for (int i = 58; i <= 58+(7*3); i+=3) {
@@ -816,10 +827,10 @@ void ofApp::sendToDMX() {
             dmxData_[i+1] = int(sideLevel);
             dmxData_[i+2] = int(sideLevel);
         }
-        sideLevel += 1.0;
+        sideLevel += 2.0;
         if (sideLevel >= 255.0) {
             sideLevel = 0.0;
-            sideSection = 1;
+            //sideSection = 1;
         }
     }
     
