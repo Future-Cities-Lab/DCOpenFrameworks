@@ -702,9 +702,6 @@ void ofApp::sendToDMX() {
     dmxData_[8] = int(c3.g);
     dmxData_[9] = int(c3.b);
 
-//    dmxData_[10] = int(c4.r);
-//    dmxData_[11] = int(c4.g);
-//    dmxData_[12] = int(c4.b);
     for (int i = 10; i <= 112; i+=3) {
         dmxData_[i] = int(c4.r);
         dmxData_[i+1] = int(c4.g);
@@ -714,16 +711,20 @@ void ofApp::sendToDMX() {
     if (slidePosition >= 100.0) {
         slidePosition = 0.0;
     }
-    // IDEA 1
-//    int channel = ofMap(slidePosition, 0.0, 100.0, 0, 34);
-//    int channelPositionInDMX = 10 + (3*channel);
-//    dmxData_[channelPositionInDMX+0] = int(255);
-//    dmxData_[channelPositionInDMX+1] = int(255);
-//    dmxData_[channelPositionInDMX+2] = int(255);
+
     
     // IDEA 2
     int channel = ofMap(slidePosition, 0.0, 100.0, 0, 17);
     int channel2 = 34 - channel;
+    
+    int channel1Behind = channel - 1;
+    int channel1Front = channel + 1;
+    
+    channel1Behind += 2;
+    channel1Behind %= 34;
+    
+    channel1Front += 2;
+    channel1Front %= 34;
 
     channel += 2;
     channel %= 34;
@@ -731,14 +732,26 @@ void ofApp::sendToDMX() {
     channel2 += 2;
     channel2 %= 34;
     
+    int channelPositionInDMX1Behind = 10 + (3*channel1Behind);
     int channelPositionInDMX = 10 + (3*channel);
+    int channelPositionInDMX1Front = 10 + (3*channel1Front);
+    
     int channelPositionInDMX2 = 10 + (3*channel2);
     
 
+    dmxData_[channelPositionInDMX1Behind+0] = int(255);
+    dmxData_[channelPositionInDMX1Behind+1] = int(255);
+    dmxData_[channelPositionInDMX1Behind+2] = int(255);
+    
     dmxData_[channelPositionInDMX+0] = int(255);
     dmxData_[channelPositionInDMX+1] = int(255);
     dmxData_[channelPositionInDMX+2] = int(255);
 
+    dmxData_[channelPositionInDMX1Front+0] = int(255);
+    dmxData_[channelPositionInDMX1Front+1] = int(255);
+    dmxData_[channelPositionInDMX1Front+2] = int(255);
+    
+    
     dmxData_[channelPositionInDMX2+0] = int(255);
     dmxData_[channelPositionInDMX2+1] = int(255);
     dmxData_[channelPositionInDMX2+2] = int(255);
