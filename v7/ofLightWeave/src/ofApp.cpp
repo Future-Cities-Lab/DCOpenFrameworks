@@ -714,64 +714,92 @@ void ofApp::sendToDMX() {
 
     
     // IDEA 2
-    int channel = ofMap(slidePosition, 0.0, 100.0, 0, 17);
-    int channel2 = 34 - channel;
+//    int channel = ofMap(slidePosition, 0.0, 100.0, 0, 17);
+//    int channel2 = 34 - channel;
+//    
+//    int channel1Behind = channel - 1;
+//    int channel1Front = channel + 1;
+//    
+//    int channel2Behind = channel2 - 1;
+//    int channel2Front = channel2 + 1;
+//    
+//    channel1Behind += 2;
+//    channel1Behind %= 34;
+//    channel += 2;
+//    channel %= 34;
+//    channel1Front += 2;
+//    channel1Front %= 34;
+//
+//    
+//    channel2Behind += 2;
+//    channel2Behind %= 34;
+//    channel2 += 2;
+//    channel2 %= 34;
+//    channel2Front += 2;
+//    channel2Front %= 34;
+//    
+//    
+//    int channelPositionInDMX1Behind = 10 + (3*channel1Behind);
+//    int channelPositionInDMX = 10 + (3*channel);
+//    int channelPositionInDMX1Front = 10 + (3*channel1Front);
+//    
+//    int channelPositionInDMX2Behind = 10 + (3*channel2Behind);
+//    int channelPositionInDMX2 = 10 + (3*channel2);
+//    int channelPositionInDMX2Front = 10 + (3*channel2Front);
+//
+//
+//    dmxData_[channelPositionInDMX1Behind+0] = int(255);
+//    dmxData_[channelPositionInDMX1Behind+1] = int(255);
+//    dmxData_[channelPositionInDMX1Behind+2] = int(255);
+//    
+//    dmxData_[channelPositionInDMX+0] = int(255);
+//    dmxData_[channelPositionInDMX+1] = int(255);
+//    dmxData_[channelPositionInDMX+2] = int(255);
+//
+//    dmxData_[channelPositionInDMX1Front+0] = int(255);
+//    dmxData_[channelPositionInDMX1Front+1] = int(255);
+//    dmxData_[channelPositionInDMX1Front+2] = int(255);
+//    
+//    
+//    dmxData_[channelPositionInDMX2Behind+0] = int(255);
+//    dmxData_[channelPositionInDMX2Behind+1] = int(255);
+//    dmxData_[channelPositionInDMX2Behind+2] = int(255);
+//    
+//    dmxData_[channelPositionInDMX2+0] = int(255);
+//    dmxData_[channelPositionInDMX2+1] = int(255);
+//    dmxData_[channelPositionInDMX2+2] = int(255);
+//    
+//    dmxData_[channelPositionInDMX2Front+0] = int(255);
+//    dmxData_[channelPositionInDMX2Front+1] = int(255);
+//    dmxData_[channelPositionInDMX2Front+2] = int(255);
     
-    int channel1Behind = channel - 1;
-    int channel1Front = channel + 1;
     
-    int channel2Behind = channel2 - 1;
-    int channel2Front = channel2 + 1;
+    // IDEA 3
+    /* SECTION 1 */
+    for (int i = 10; i <= 10+(9*3); i+=3) {
+        dmxData_[i+0] = int(255);
+        dmxData_[i+1] = int(0);
+        dmxData_[i+2] = int(0);
+    }
     
-    channel1Behind += 2;
-    channel1Behind %= 34;
-    channel += 2;
-    channel %= 34;
-    channel1Front += 2;
-    channel1Front %= 34;
-
+    /* SECTION 2 */
+    for (int i = 40; i <= 40+(8*3); i+=3) {
+        dmxData_[i+0] = int(0);
+        dmxData_[i+1] = int(255);
+        dmxData_[i+2] = int(0);
+    }
+    for (int i = 94; i <= 94+(9*3); i+=3) {
+        dmxData_[i+0] = int(0);
+        dmxData_[i+1] = int(255);
+        dmxData_[i+2] = int(0);
+    }
     
-    channel2Behind += 2;
-    channel2Behind %= 34;
-    channel2 += 2;
-    channel2 %= 34;
-    channel2Front += 2;
-    channel2Front %= 34;
-    
-    
-    int channelPositionInDMX1Behind = 10 + (3*channel1Behind);
-    int channelPositionInDMX = 10 + (3*channel);
-    int channelPositionInDMX1Front = 10 + (3*channel1Front);
-    
-    int channelPositionInDMX2Behind = 10 + (3*channel2Behind);
-    int channelPositionInDMX2 = 10 + (3*channel2);
-    int channelPositionInDMX2Front = 10 + (3*channel2Front);
-
-
-    dmxData_[channelPositionInDMX1Behind+0] = int(255);
-    dmxData_[channelPositionInDMX1Behind+1] = int(255);
-    dmxData_[channelPositionInDMX1Behind+2] = int(255);
-    
-    dmxData_[channelPositionInDMX+0] = int(255);
-    dmxData_[channelPositionInDMX+1] = int(255);
-    dmxData_[channelPositionInDMX+2] = int(255);
-
-    dmxData_[channelPositionInDMX1Front+0] = int(255);
-    dmxData_[channelPositionInDMX1Front+1] = int(255);
-    dmxData_[channelPositionInDMX1Front+2] = int(255);
-    
-    
-    dmxData_[channelPositionInDMX2Behind+0] = int(255);
-    dmxData_[channelPositionInDMX2Behind+1] = int(255);
-    dmxData_[channelPositionInDMX2Behind+2] = int(255);
-    
-    dmxData_[channelPositionInDMX2+0] = int(255);
-    dmxData_[channelPositionInDMX2+1] = int(255);
-    dmxData_[channelPositionInDMX2+2] = int(255);
-    
-    dmxData_[channelPositionInDMX2Front+0] = int(255);
-    dmxData_[channelPositionInDMX2Front+1] = int(255);
-    dmxData_[channelPositionInDMX2Front+2] = int(255);
+    /* SECTION 3 */
+    for (int i = 67; i <= 67+(9*3); i+=3) {
+        dmxData_[i+0] = int(0);
+        dmxData_[i+1] = int(0);
+        dmxData_[i+2] = int(255);
+    }
     
     dmxData_[0] = 0;
 
