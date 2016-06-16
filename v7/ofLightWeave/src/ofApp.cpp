@@ -717,15 +717,15 @@ void ofApp::sendToDMX() {
     dmxData_[8] = int(c3.g);
     dmxData_[9] = int(c3.b);
 
-    for (int i = 10; i <= 112; i+=3) {
-        dmxData_[i] = int(c4.r);
-        dmxData_[i+1] = int(c4.g);
-        dmxData_[i+2] = int(c4.b);
-    }
-    slidePosition+=1.0;
-    if (slidePosition >= 100.0) {
-        slidePosition = 0.0;
-    }
+//    for (int i = 10; i <= 112; i+=3) {
+//        dmxData_[i] = int(c4.r);
+//        dmxData_[i+1] = int(c4.g);
+//        dmxData_[i+2] = int(c4.b);
+//    }
+//    slidePosition+=1.0;
+//    if (slidePosition >= 100.0) {
+//        slidePosition = 0.0;
+//    }
 
     
     // IDEA 2
