@@ -131,13 +131,13 @@ void ofApp::setup() {
     }
     
 
-//    vidGrabber.setDeviceID(pcCams[0]);
-    vidGrabber.setDeviceID(0);
+    vidGrabber.setDeviceID(pcCams[0]);
+//    vidGrabber.setDeviceID(0);
 
     vidGrabber.initGrabber(320,240);
     
-//    vidGrabber1.setDeviceID(pcCams[1]);
-    vidGrabber1.setDeviceID(0);
+    vidGrabber1.setDeviceID(pcCams[1]);
+//    vidGrabber1.setDeviceID(0);
 
     vidGrabber1.initGrabber(320,240);
     
