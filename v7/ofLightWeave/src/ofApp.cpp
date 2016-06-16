@@ -710,25 +710,16 @@ void ofApp::sendToDMX() {
         dmxData_[i+1] = int(c4.g);
         dmxData_[i+2] = int(c4.b);
     }
-    
-    if (contourFinder.nBlobs > 0) {
-        slidePosition+=1.0;
-        if (slidePosition >= 100.0) {
-            slidePosition = 0.0;
-        }
-        int channel = ofMap(slidePosition, 0.0, 100.0, 0, 34);
-        int channelPositionInDMX = 10 + (3*channel);
-
-//        cout << channelPositionInDMX+0 << endl;
-//        cout << channelPositionInDMX+1 << endl;
-//        cout << channelPositionInDMX+2 << endl;
-//        cout << "" << endl;
-        dmxData_[channelPositionInDMX+0] = int(c4.r);
-        dmxData_[channelPositionInDMX+1] = int(c4.g);
-        dmxData_[channelPositionInDMX+2] = int(c4.b);
-    
-
+    slidePosition+=1.0;
+    if (slidePosition >= 100.0) {
+        slidePosition = 0.0;
     }
+    int channel = ofMap(slidePosition, 0.0, 100.0, 0, 34);
+    int channelPositionInDMX = 10 + (3*channel);
+    dmxData_[channelPositionInDMX+0] = int(255);
+    dmxData_[channelPositionInDMX+1] = int(255);
+    dmxData_[channelPositionInDMX+2] = int(255);
+
     
 //    dmxData_[13] = int(newC.r);
 //    dmxData_[14] = int(newC.g);
