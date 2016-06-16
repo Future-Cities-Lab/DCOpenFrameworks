@@ -714,29 +714,28 @@ void ofApp::sendToDMX() {
     if (slidePosition >= 100.0) {
         slidePosition = 0.0;
     }
-    int channel = ofMap(slidePosition, 0.0, 100.0, 0, 34);
+    // IDEA 1
+//    int channel = ofMap(slidePosition, 0.0, 100.0, 0, 34);
+//    int channelPositionInDMX = 10 + (3*channel);
+//    dmxData_[channelPositionInDMX+0] = int(255);
+//    dmxData_[channelPositionInDMX+1] = int(255);
+//    dmxData_[channelPositionInDMX+2] = int(255);
+    
+    // IDEA 2
+    int channel = ofMap(slidePosition, 0.0, 100.0, 0, 17);
+    int channel2 = 34 - channel;
+
     int channelPositionInDMX = 10 + (3*channel);
+    int channelPositionInDMX2 = 10 + (3*channel2);
+    
+
     dmxData_[channelPositionInDMX+0] = int(255);
     dmxData_[channelPositionInDMX+1] = int(255);
     dmxData_[channelPositionInDMX+2] = int(255);
 
-    
-//    dmxData_[13] = int(newC.r);
-//    dmxData_[14] = int(newC.g);
-//    dmxData_[15] = int(newC.b);
-//    
-//    dmxData_[16] = int(newC.r);
-//    dmxData_[17] = int(newC.g);
-//    dmxData_[18] = int(newC.b);
-//    
-//    dmxData_[19] = int(newC.r);
-//    dmxData_[20] = int(newC.g);
-//    dmxData_[21] = int(newC.b);
-//    
-//    dmxData_[22] = int(newC.r);
-//    dmxData_[23] = int(newC.g);
-//    dmxData_[24] = int(newC.b);
-    
+    dmxData_[channelPositionInDMX2+0] = int(255);
+    dmxData_[channelPositionInDMX2+1] = int(255);
+    dmxData_[channelPositionInDMX2+2] = int(255);
     
     dmxData_[0] = 0;
 
