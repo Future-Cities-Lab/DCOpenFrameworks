@@ -728,6 +728,12 @@ void ofApp::sendToDMX() {
     int channelPositionInDMX = 10 + (3*channel);
     int channelPositionInDMX2 = 10 + (3*channel2);
     
+    channelPositionInDMX += 2;
+    channelPositionInDMX %= 34;
+    
+    channelPositionInDMX2 += 2;
+    channelPositionInDMX2 %= 34;
+    
 
     dmxData_[channelPositionInDMX+0] = int(255);
     dmxData_[channelPositionInDMX+1] = int(255);
