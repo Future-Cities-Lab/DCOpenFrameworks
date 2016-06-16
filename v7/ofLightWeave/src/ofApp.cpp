@@ -777,9 +777,9 @@ void ofApp::sendToDMX() {
     // IDEA 3
     /* SECTION 1 */
     for (int i = 106; i <= 106+(2*3); i+=3) {
-        dmxData_[i+0] = int(0);
+        dmxData_[i+0] = int(255);
         dmxData_[i+1] = int(0);
-        dmxData_[i+2] = int(255);
+        dmxData_[i+2] = int(0);
     }
     
     for (int i = 10; i <= 10+(8*3); i+=3) {
