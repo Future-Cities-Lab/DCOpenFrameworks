@@ -725,14 +725,14 @@ void ofApp::sendToDMX() {
     int channel = ofMap(slidePosition, 0.0, 100.0, 0, 17);
     int channel2 = 34 - channel;
 
+    channel += 2;
+    channel %= 34;
+    
+    channel2 += 2;
+    channel2 %= 34;
+    
     int channelPositionInDMX = 10 + (3*channel);
     int channelPositionInDMX2 = 10 + (3*channel2);
-    
-    channelPositionInDMX += 2;
-    channelPositionInDMX %= 34;
-    
-    channelPositionInDMX2 += 2;
-    channelPositionInDMX2 %= 34;
     
 
     dmxData_[channelPositionInDMX+0] = int(255);
