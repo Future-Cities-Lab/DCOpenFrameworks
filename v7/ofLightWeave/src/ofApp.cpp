@@ -59,7 +59,8 @@ int previousBlobCount2 = 0;
 
 float avgYPosOfBlobs = 0.0;
 
-float slidePosition = 0.0;
+//float slidePosition = 0.0;
+ofVec2f horizontalPosition = ofVec2f(0.0, 0.0);
 
 int sideSection = 1;
 float sideLevel = 0.0;
@@ -131,13 +132,13 @@ void ofApp::setup() {
     }
     
 
-//    vidGrabber.setDeviceID(pcCams[0]);
-    vidGrabber.setDeviceID(0);
+    vidGrabber.setDeviceID(pcCams[0]);
+//    vidGrabber.setDeviceID(0);
 
     vidGrabber.initGrabber(320,240);
     
-//    vidGrabber1.setDeviceID(pcCams[1]);
-    vidGrabber1.setDeviceID(0);
+    vidGrabber1.setDeviceID(pcCams[1]);
+//    vidGrabber1.setDeviceID(0);
 
     vidGrabber1.initGrabber(320,240);
     
@@ -732,14 +733,33 @@ void ofApp::sendToDMX() {
     }
 
     // UPDATING POSITION.......
-    slidePosition +=1.0;
-    if (slidePosition >= 100.0) {
-        slidePosition = 0.0;
-    }
-
+//    slidePosition +=1.0;
+//    if (slidePosition >= 100.0) {
+//        slidePosition = 0.0;
+//    }
     
-//    // IDEA 2
-    int channel = ofMap(slidePosition, 0.0, 100.0, 0, 17);
+    ofVec2f btm = ofVec2f(0.0, 0.0);
+    if (sideSection == 0) {
+        btm.x = 0.0;
+    } else if (sideSection == 1) {
+        btm.x = 4.0;
+    } else if (sideSection == 2) {
+        btm.x = 8.0;
+    } else {
+        btm.x = 12.0;
+    }
+    
+    ofVec2f desired =  btm - horizontalPosition;
+    horizontalPosition += desired;
+    cout << "horizontalPosition.x = " << endl;
+    cout << horizontalPosition.x << endl;
+    cout << "" << endl;
+
+    //float d = sqrt((desired.x*desired.x) + (desired.y+desired.y));
+    
+    // IDEA 2
+//    int channel = ofMap(slidePosition, 0.0, 100.0, 0, 17);
+    int channel = horizontalPosition.x;
     int channel2 = 34 - channel;
     
     int channel1Behind = channel - 1;
