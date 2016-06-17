@@ -535,16 +535,16 @@ void ofApp::draw() {
         }
         
         if (avgYPosOfBlobs == 0) {
-            cout << 0 << endl;
+//            cout << 0 << endl;
         } else if (avgYPosOfBlobs > 0 && avgYPosOfBlobs <= 238.0/3.0) {
             sideSection = 1;
-            cout << 1 << endl;
+//            cout << 1 << endl;
         } else if (avgYPosOfBlobs > 238.0/3.0 && avgYPosOfBlobs <= (2.0*238.0)/3.0) {
             sideSection = 2;
-            cout << 2 << endl;
+//            cout << 2 << endl;
         } else {
             sideSection = 3;
-            cout << 3 << endl;
+//            cout << 3 << endl;
         }
 
         ofNoFill();
@@ -678,7 +678,7 @@ void ofApp::sendToDMX() {
     float top2_g = ofMap(camera2BackgroundLevel, 0.0, 255.0, bGreen*.25, 255.0);
     float top2_b = ofMap(camera2BackgroundLevel, 0.0, 255.0, bBlue*.25, 255.0);
     
-    ofColor bleh = ofColor(255.0, 0.0, 255.0);
+    ofColor bleh = ofColor(255.0, 255.0, 0.0);
     
     
     ofColor c;
