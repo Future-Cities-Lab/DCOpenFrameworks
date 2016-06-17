@@ -724,9 +724,9 @@ void ofApp::sendToDMX() {
     dmxData_[9] = int(c3.b);
 
     for (int i = 10; i <= 112; i+=3) {
-        dmxData_[i] = int(bRed*.25);
-        dmxData_[i+1] = int(bGreen*.25);
-        dmxData_[i+2] = int(bBlue*.25);
+        dmxData_[i] = int(c4.r);
+        dmxData_[i+1] = int(c4.g);
+        dmxData_[i+2] = int(c4.b);
     }
 
     
@@ -789,59 +789,59 @@ void ofApp::sendToDMX() {
 //    dmxData_[channelPositionInDMX2Front+0] = int(255);
 //    dmxData_[channelPositionInDMX2Front+1] = int(255);
 //    dmxData_[channelPositionInDMX2Front+2] = int(255);
-    if (sideSection == 0) {
-        
-    } else if (sideSection == 1) {
-        for (int i = 106; i <= 106+(2*3); i+=3) {
-            dmxData_[i+0] = int(sideLevel);
-            dmxData_[i+1] = int(sideLevel);
-            dmxData_[i+2] = int(sideLevel);
-        }
-        
-        for (int i = 10; i <= 10+(8*3); i+=3) {
-            dmxData_[i+0] = int(sideLevel);
-            dmxData_[i+1] = int(sideLevel);
-            dmxData_[i+2] = int(sideLevel);
-        }
-        if (sideLevel < 255.0) {
-            sideLevel += 5.0;
-        }
-        if (sideLevel >= 255.0) {
-            sideLevel = 0.0;
-            //sideSection = 2;
-        }
-    } else if (sideSection == 2) {
-        for (int i = 37; i <= 37+(6*3); i+=3) {
-            dmxData_[i+0] = int(sideLevel);
-            dmxData_[i+1] = int(sideLevel);
-            dmxData_[i+2] = int(sideLevel);
-        }
-        for (int i = 82; i <= 82+(7*3); i+=3) {
-            dmxData_[i+0] = int(sideLevel);
-            dmxData_[i+1] = int(sideLevel);
-            dmxData_[i+2] = int(sideLevel);
-        }
-        if (sideLevel < 255.0) {
-            sideLevel += 5.0;
-        }
-        if (sideLevel >= 255.0) {
-            sideLevel = 0.0;
-            //sideSection = 3;
-        }
-    } else {
-        for (int i = 58; i <= 58+(7*3); i+=3) {
-            dmxData_[i+0] = int(sideLevel);
-            dmxData_[i+1] = int(sideLevel);
-            dmxData_[i+2] = int(sideLevel);
-        }
-        if (sideLevel < 255.0) {
-            sideLevel += 5.0;
-        }
-        if (sideLevel >= 255.0) {
-            sideLevel = 0.0;
-            //sideSection = 1;
-        }
-    }
+//    if (sideSection == 0) {
+//        
+//    } else if (sideSection == 1) {
+//        for (int i = 106; i <= 106+(2*3); i+=3) {
+//            dmxData_[i+0] = int(sideLevel);
+//            dmxData_[i+1] = int(sideLevel);
+//            dmxData_[i+2] = int(sideLevel);
+//        }
+//        
+//        for (int i = 10; i <= 10+(8*3); i+=3) {
+//            dmxData_[i+0] = int(sideLevel);
+//            dmxData_[i+1] = int(sideLevel);
+//            dmxData_[i+2] = int(sideLevel);
+//        }
+//        if (sideLevel < 255.0) {
+//            sideLevel += 5.0;
+//        }
+//        if (sideLevel >= 255.0) {
+//            sideLevel = 0.0;
+//            //sideSection = 2;
+//        }
+//    } else if (sideSection == 2) {
+//        for (int i = 37; i <= 37+(6*3); i+=3) {
+//            dmxData_[i+0] = int(sideLevel);
+//            dmxData_[i+1] = int(sideLevel);
+//            dmxData_[i+2] = int(sideLevel);
+//        }
+//        for (int i = 82; i <= 82+(7*3); i+=3) {
+//            dmxData_[i+0] = int(sideLevel);
+//            dmxData_[i+1] = int(sideLevel);
+//            dmxData_[i+2] = int(sideLevel);
+//        }
+//        if (sideLevel < 255.0) {
+//            sideLevel += 5.0;
+//        }
+//        if (sideLevel >= 255.0) {
+//            sideLevel = 0.0;
+//            //sideSection = 3;
+//        }
+//    } else {
+//        for (int i = 58; i <= 58+(7*3); i+=3) {
+//            dmxData_[i+0] = int(sideLevel);
+//            dmxData_[i+1] = int(sideLevel);
+//            dmxData_[i+2] = int(sideLevel);
+//        }
+//        if (sideLevel < 255.0) {
+//            sideLevel += 5.0;
+//        }
+//        if (sideLevel >= 255.0) {
+//            sideLevel = 0.0;
+//            //sideSection = 1;
+//        }
+//    }
     
     
 //    // IDEA 3
