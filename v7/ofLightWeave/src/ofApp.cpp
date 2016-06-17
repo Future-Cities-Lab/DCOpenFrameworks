@@ -528,17 +528,23 @@ void ofApp::draw() {
                 contourFinder1.blobs[i].draw(578, 150);
             }
         }
-        avgYPosOfBlobs /= contourFinder1.nBlobs;
+        if (contourFinder1.nBlobs > 0) {
+            avgYPosOfBlobs /= contourFinder1.nBlobs;
+        } else {
+            avgYPosOfBlobs = 0.0;
+        }
         
-        if (avgYPosOfBlobs >= 0 && avgYPosOfBlobs <= 238.0/3.0) {
+        if (avgYPosOfBlobs == 0) {
+            cout << 0 << endl;
+        } else if (avgYPosOfBlobs > 0 && avgYPosOfBlobs <= 238.0/3.0) {
             sideSection = 1;
-            //cout << 1 << endl;
+            cout << 1 << endl;
         } else if (avgYPosOfBlobs > 238.0/3.0 && avgYPosOfBlobs <= (2.0*238.0)/3.0) {
             sideSection = 2;
-            //cout << 2 << endl;
+            cout << 2 << endl;
         } else {
             sideSection = 3;
-            //cout << 3 << endl;
+            cout << 3 << endl;
         }
 
         ofNoFill();
@@ -722,10 +728,6 @@ void ofApp::sendToDMX() {
         dmxData_[i+1] = int(bGreen*.25);
         dmxData_[i+2] = int(bBlue*.25);
     }
-//    slidePosition+=1.0;
-//    if (slidePosition >= 100.0) {
-//        slidePosition = 0.0;
-//    }
 
     
     // IDEA 2
@@ -787,8 +789,9 @@ void ofApp::sendToDMX() {
 //    dmxData_[channelPositionInDMX2Front+0] = int(255);
 //    dmxData_[channelPositionInDMX2Front+1] = int(255);
 //    dmxData_[channelPositionInDMX2Front+2] = int(255);
-    
-    if (sideSection == 1) {
+    if (sideSection == 0) {
+        
+    } else if (sideSection == 1) {
         for (int i = 106; i <= 106+(2*3); i+=3) {
             dmxData_[i+0] = int(sideLevel);
             dmxData_[i+1] = int(sideLevel);
