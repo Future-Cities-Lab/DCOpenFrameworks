@@ -762,7 +762,7 @@ void ofApp::sendToDMX() {
             btm.x = 16.0;
         }
         ofVec2f desired =  btm - horizontalPosition;
-        desired.x /= 4.0;
+        desired.x /= 14.0;
         horizontalPosition += desired;
         
         cout << horizontalPosition << endl;
