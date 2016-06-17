@@ -728,6 +728,10 @@ void ofApp::sendToDMX() {
         dmxData_[i+1] = int(c4.g);
         dmxData_[i+2] = int(c4.b);
     }
+    slidePosition +=1.0;
+    if (slidePosition >= 100.0) {
+        slidePosition = 0.0;
+    }
 
     
     // IDEA 2
