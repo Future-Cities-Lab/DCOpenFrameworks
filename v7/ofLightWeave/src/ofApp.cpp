@@ -549,23 +549,15 @@ void ofApp::draw() {
         } else {
             avgYPosOfBlobs = contourFinder.blobs[biggestBlobPos].centroid.y;
         }
-//        cout << "avgYPosOfBlobs = " << endl;
-//        cout << avgYPosOfBlobs << endl;
-//        cout << "" << endl;
-
-//
+        
         if (avgYPosOfBlobs == 0) {
             sideSection = 0;
-//            cout << 0 << endl;
         } else if (avgYPosOfBlobs > 0 && avgYPosOfBlobs <= 238.0/3.0) {
             sideSection = 1;
-//            cout << 1 << endl;
         } else if (avgYPosOfBlobs > 238.0/3.0 && avgYPosOfBlobs <= (2.0*238.0)/3.0) {
             sideSection = 2;
-//            cout << 2 << endl;
         } else {
             sideSection = 3;
-//            cout << 3 << endl;
         }
 
         ofNoFill();
@@ -770,7 +762,10 @@ void ofApp::sendToDMX() {
             btm.x = 16.0;
         }
         ofVec2f desired =  btm - horizontalPosition;
+        desired.x /= 4.0;
         horizontalPosition += desired;
+        
+        cout << horizontalPosition << endl;
         
         int channel = horizontalPosition.x;
         int channel2 = 34 - channel;
