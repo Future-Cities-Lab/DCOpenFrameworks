@@ -132,13 +132,13 @@ void ofApp::setup() {
     }
     
 
-    vidGrabber.setDeviceID(pcCams[0]);
-//    vidGrabber.setDeviceID(0);
+//    vidGrabber.setDeviceID(pcCams[0]);
+    vidGrabber.setDeviceID(0);
 
     vidGrabber.initGrabber(320,240);
     
-    vidGrabber1.setDeviceID(pcCams[1]);
-//    vidGrabber1.setDeviceID(0);
+//    vidGrabber1.setDeviceID(pcCams[1]);
+    vidGrabber1.setDeviceID(0);
 
     vidGrabber1.initGrabber(320,240);
     
@@ -521,7 +521,7 @@ void ofApp::draw() {
         colorImg.draw(238, 150);
 
         
-        avgYPosOfBlobs = 0.0;
+        //avgYPosOfBlobs = 0.0;
         for (int i = 0; i < contourFinder1.nBlobs; i++) {
             avgYPosOfBlobs += contourFinder1.blobs[i].centroid.y;
             
@@ -529,13 +529,33 @@ void ofApp::draw() {
                 contourFinder1.blobs[i].draw(578, 150);
             }
         }
-        if (contourFinder1.nBlobs > 0) {
-            avgYPosOfBlobs /= contourFinder1.nBlobs;
-        } else {
-            avgYPosOfBlobs = 0.0;
-        }
+//        if (contourFinder1.nBlobs > 0) {
+//            avgYPosOfBlobs /= contourFinder1.nBlobs;
+//        } else {
+//            avgYPosOfBlobs = 0.0;
+//        }
         
+        avgYPosOfBlobs = 0.0;
+        int biggestBlobPos = 0;
+        float largestBlobArea = -1000.0;
+        for (int i = 0; i < contourFinder.nBlobs; i++) {
+            if (contourFinder.blobs[i].area > largestBlobArea) {
+                largestBlobArea = contourFinder.blobs[i].area;
+                biggestBlobPos = i;
+            }
+        }
+        if (contourFinder.nBlobs == 0) {
+            avgYPosOfBlobs = 0;
+        } else {
+            avgYPosOfBlobs = contourFinder.blobs[biggestBlobPos].centroid.y;
+        }
+//        cout << "avgYPosOfBlobs = " << endl;
+//        cout << avgYPosOfBlobs << endl;
+//        cout << "" << endl;
+
+//
         if (avgYPosOfBlobs == 0) {
+            sideSection = 0;
 //            cout << 0 << endl;
         } else if (avgYPosOfBlobs > 0 && avgYPosOfBlobs <= 238.0/3.0) {
             sideSection = 1;
@@ -751,11 +771,6 @@ void ofApp::sendToDMX() {
     
     ofVec2f desired =  btm - horizontalPosition;
     horizontalPosition += desired;
-    cout << "horizontalPosition.x = " << endl;
-    cout << horizontalPosition.x << endl;
-    cout << "" << endl;
-
-    //float d = sqrt((desired.x*desired.x) + (desired.y+desired.y));
     
     // IDEA 2
 //    int channel = ofMap(slidePosition, 0.0, 100.0, 0, 17);
