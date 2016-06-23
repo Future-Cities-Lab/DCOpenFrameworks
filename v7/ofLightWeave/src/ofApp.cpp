@@ -947,33 +947,33 @@ void ofApp::sendToDMX() {
     /* SECTION 1 */
     for (int i = 106; i <= 106+(2*3); i+=3) {
         dmxData_[i+0] = int(leftLevel);
-        dmxData_[i+1] = int(0);
+        dmxData_[i+1] = int(leftLevel);
         dmxData_[i+2] = int(0);
     }
     
     for (int i = 10; i <= 10+(8*3); i+=3) {
         dmxData_[i+0] = int(leftLevel);
-        dmxData_[i+1] = int(0);
+        dmxData_[i+1] = int(leftLevel);
         dmxData_[i+2] = int(0);
     }
     
     /* SECTION 2 */
     for (int i = 37; i <= 37+(6*3); i+=3) {
-        dmxData_[i+0] = int(0);
+        dmxData_[i+0] = int(centerLevel);
         dmxData_[i+1] = int(centerLevel);
         dmxData_[i+2] = int(0);
     }
     for (int i = 82; i <= 82+(7*3); i+=3) {
-        dmxData_[i+0] = int(0);
+        dmxData_[i+0] = int(centerLevel);
         dmxData_[i+1] = int(centerLevel);
         dmxData_[i+2] = int(0);
     }
     
     /* SECTION 3 */
     for (int i = 58; i <= 58+(7*3); i+=3) {
-        dmxData_[i+0] = int(0);
-        dmxData_[i+1] = int(0);
-        dmxData_[i+2] = int(rightLevel);
+        dmxData_[i+0] = int(rightLevel);
+        dmxData_[i+1] = int(rightLevel);
+        dmxData_[i+2] = int(0);
     }
     
     dmxData_[0] = 0;
