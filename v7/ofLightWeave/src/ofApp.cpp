@@ -939,6 +939,11 @@ void ofApp::sendToDMX() {
     float l_r = ofMap(leftLevel, 0.0, 255.0, bRed*.25, 255.0);
     float l_g = ofMap(leftLevel, 0.0, 255.0, bGreen*.25, 255.0);
     float l_b = ofMap(leftLevel, 0.0, 255.0, bBlue*.25, 0.0);
+    cout << "Section 2" << endl;
+    cout << l_r << endl;
+    cout << l_g << endl;
+    cout << l_b << endl;
+    cout << "" << endl;
     for (int i = 106; i <= 106+(2*3); i+=3) {
         dmxData_[i+0] = int(l_r);
         dmxData_[i+1] = int(l_g);
@@ -955,6 +960,11 @@ void ofApp::sendToDMX() {
     float c_r = ofMap(centerLevel, 0.0, 255.0, bRed*.25, 255.0);
     float c_g = ofMap(centerLevel, 0.0, 255.0, bGreen*.25, 255.0);
     float c_b = ofMap(centerLevel, 0.0, 255.0, bBlue*.25, 0.0);
+    cout << "Section 2" << endl;
+    cout << c_r << endl;
+    cout << c_g << endl;
+    cout << c_b << endl;
+    cout << "" << endl;
     for (int i = 37; i <= 37+(6*3); i+=3) {
         dmxData_[i+0] = int(c_r);
         dmxData_[i+1] = int(c_g);
@@ -970,6 +980,11 @@ void ofApp::sendToDMX() {
     float r_r = ofMap(rightLevel, 0.0, 255.0, bRed*.25, 255.0);
     float r_g = ofMap(rightLevel, 0.0, 255.0, bGreen*.25, 255.0);
     float r_b = ofMap(rightLevel, 0.0, 255.0, bBlue*.25, 0.0);
+    cout << "Section 3" << endl;
+    cout << r_r << endl;
+    cout << r_g << endl;
+    cout << r_b << endl;
+    cout << "" << endl;
     for (int i = 58; i <= 58+(7*3); i+=3) {
         dmxData_[i+0] = int(r_r);
         dmxData_[i+1] = int(r_g);
