@@ -66,6 +66,12 @@ int sideSection = 1;
 float sideLevel = 0.0;
 
 
+/* NEW CODE: SECTIONS OF 3 */
+float leftLevel = 0.0;
+float centerLevel = 0.0;
+float rightLevel = 0.0;
+
+
 
 void ofApp::setup() {
     
@@ -256,27 +262,82 @@ void ofApp::update() {
         grayDiff.threshold(threshold);
         contourFinder.findContours(grayDiff, 20, (340*240)/3, 10, true);
         
+        bool leftHasIt = false;
+        bool centerHasIt = false;
+        bool rightHasIt = false;
         
-        // CHECK AREA
-        bool hasLargeEnoughArea = false;
         for (int i = 0; i < contourFinder.nBlobs; i++) {
-            if (contourFinder.blobs[i].area >= minBlobArea) {
-                hasLargeEnoughArea = true;
-                break;
+            if (contourFinder.blobs[i].centroid.y >= 0.0 && contourFinder.blobs[i].centroid.y <= (240.0/3.0)) {
+                leftHasIt = true;
+                //scout << "Left" << endl;
+            } else if (contourFinder.blobs[i].centroid.y > (240.0/3.0) && contourFinder.blobs[i].centroid.y <= 2.0*(240.0/3.0)) {
+                centerHasIt = true;
+                //cout << "Center" << endl;
+            } else {
+                rightHasIt = true;
+                //cout << "Right" << endl;
             }
+            //cout << contourFinder.blobs[i].centroid.y << endl;
+        }
+        //cout << "" << endl;
+
+        if (leftHasIt) {
+            if (leftLevel < 255.0) {
+                leftLevel += 1.0;
+            }
+        } else {
+            if (leftLevel > 0.0) {
+                leftLevel -= 1.0;
+            }
+
         }
         
-        if (hasLargeEnoughArea) {
-            // CHECK BLOB #
-            if (contourFinder.nBlobs >= numBlobsNeeded) {
-                camera1BackgroundLevel += 15.0;
-                camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
+        if (centerHasIt) {
+            if (centerLevel < 255.0) {
+                centerLevel += 1.0;
+            }
+        } else {
+            if (centerLevel > 0.0) {
+                centerLevel -= 1.0;
+            }
+            
+        }
+        
+        if (rightHasIt) {
+            if (rightLevel < 255.0) {
+                rightLevel += 1.0;
+            }
+        } else {
+            if (rightLevel > 0.0) {
+                rightLevel -= 1.0;
             }
         }
-        if (contourFinder.nBlobs == 0) {
-            camera1BackgroundLevel -= 15.0;
-            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
-        }
+//        cout << "Levels" << endl;
+//        cout << leftLevel << endl;
+//        cout << centerLevel << endl;
+//        cout << rightLevel << endl;
+//        cout << "" << endl;
+
+//        // CHECK AREA
+//        bool hasLargeEnoughArea = false;
+//        for (int i = 0; i < contourFinder.nBlobs; i++) {
+//            if (contourFinder.blobs[i].area >= minBlobArea) {
+//                hasLargeEnoughArea = true;
+//                break;
+//            }
+//        }
+//        
+//        if (hasLargeEnoughArea) {
+//            // CHECK BLOB #
+//            if (contourFinder.nBlobs >= numBlobsNeeded) {
+//                camera1BackgroundLevel += 15.0;
+//                camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
+//            }
+//        }
+//        if (contourFinder.nBlobs == 0) {
+//            camera1BackgroundLevel -= 15.0;
+//            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
+//        }
     }
     
     if (bNewFrame1){
@@ -292,25 +353,25 @@ void ofApp::update() {
         grayDiff1.threshold(threshold);
         contourFinder1.findContours(grayDiff1, 20, (340*240)/3, 10, true);
         
-        bool hasLargeEnoughArea = false;
-        for (int i = 0; i < contourFinder1.nBlobs; i++) {
-            if (contourFinder1.blobs[i].area >= minBlobArea) {
-                hasLargeEnoughArea = true;
-                break;
-            }
-        }
+//        bool hasLargeEnoughArea = false;
+//        for (int i = 0; i < contourFinder1.nBlobs; i++) {
+//            if (contourFinder1.blobs[i].area >= minBlobArea) {
+//                hasLargeEnoughArea = true;
+//                break;
+//            }
+//        }
+//        
+//        if (hasLargeEnoughArea) {
+//            if (contourFinder1.nBlobs >= numBlobsNeeded) {
+//                camera2BackgroundLevel+=15.0;
+//                camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
+//            }
+//        }
+//        if (contourFinder1.nBlobs == 0) {
+//            camera2BackgroundLevel-=15.0;
+//            camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
+//        }
         
-        if (hasLargeEnoughArea) {
-            if (contourFinder1.nBlobs >= numBlobsNeeded) {
-                camera2BackgroundLevel+=15.0;
-                camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
-            }
-        }
-        if (contourFinder1.nBlobs == 0) {
-            camera2BackgroundLevel-=15.0;
-            camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
-        }
-
     }
     
     switch (ANIMATION_STATE) {
@@ -750,82 +811,82 @@ void ofApp::sendToDMX() {
 //        slidePosition = 0.0;
 //    }
     
-    ofVec2f btm = ofVec2f(0.0, 0.0);
-    if (sideSection == 0) {
-        
-    } else {
-        if (sideSection == 1) {
-            btm.x = 0.0;
-        } else if (sideSection == 2) {
-            btm.x = 8.0;
-        } else {
-            btm.x = 16.0;
-        }
-        ofVec2f desired =  btm - horizontalPosition;
-        desired.x /= 14.0;
-        horizontalPosition += desired;
-        
-        cout << horizontalPosition << endl;
-        
-        int channel = horizontalPosition.x;
-        int channel2 = 34 - channel;
-        
-        int channel1Behind = channel - 1;
-        int channel1Front = channel + 1;
-        
-        int channel2Behind = channel2 - 1;
-        int channel2Front = channel2 + 1;
-        
-        channel1Behind += 2;
-        channel1Behind %= 34;
-        channel += 2;
-        channel %= 34;
-        channel1Front += 2;
-        channel1Front %= 34;
-        
-        
-        channel2Behind += 2;
-        channel2Behind %= 34;
-        channel2 += 2;
-        channel2 %= 34;
-        channel2Front += 2;
-        channel2Front %= 34;
-        
-        
-        int channelPositionInDMX1Behind = 10 + (3*channel1Behind);
-        int channelPositionInDMX = 10 + (3*channel);
-        int channelPositionInDMX1Front = 10 + (3*channel1Front);
-        
-        int channelPositionInDMX2Behind = 10 + (3*channel2Behind);
-        int channelPositionInDMX2 = 10 + (3*channel2);
-        int channelPositionInDMX2Front = 10 + (3*channel2Front);
-        
-        
-        dmxData_[channelPositionInDMX1Behind+0] = int(255*.5);
-        dmxData_[channelPositionInDMX1Behind+1] = int(255*.5);
-        dmxData_[channelPositionInDMX1Behind+2] = int(0);
-        
-        dmxData_[channelPositionInDMX+0] = int(255);
-        dmxData_[channelPositionInDMX+1] = int(255);
-        dmxData_[channelPositionInDMX+2] = int(0);
-        
-        dmxData_[channelPositionInDMX1Front+0] = int(255*.5);
-        dmxData_[channelPositionInDMX1Front+1] = int(255*.5);
-        dmxData_[channelPositionInDMX1Front+2] = int(0);
-        
-        
-        dmxData_[channelPositionInDMX2Behind+0] = int(255*.5);
-        dmxData_[channelPositionInDMX2Behind+1] = int(255*.5);
-        dmxData_[channelPositionInDMX2Behind+2] = int(0);
-        
-        dmxData_[channelPositionInDMX2+0] = int(255);
-        dmxData_[channelPositionInDMX2+1] = int(255);
-        dmxData_[channelPositionInDMX2+2] = int(0);
-        
-        dmxData_[channelPositionInDMX2Front+0] = int(255*.5);
-        dmxData_[channelPositionInDMX2Front+1] = int(255*.5);
-        dmxData_[channelPositionInDMX2Front+2] = int(0);
-    }
+    /* MINI SWARM */
+    
+//    ofVec2f btm = ofVec2f(0.0, 0.0);
+//    if (sideSection == 0) {
+//        
+//    } else {
+//        if (sideSection == 1) {
+//            btm.x = 0.0;
+//        } else if (sideSection == 2) {
+//            btm.x = 8.0;
+//        } else {
+//            btm.x = 16.0;
+//        }
+//        ofVec2f desired =  btm - horizontalPosition;
+//        desired.x /= 14.0;
+//        horizontalPosition += desired;
+//        
+//        int channel = horizontalPosition.x;
+//        int channel2 = 34 - channel;
+//        
+//        int channel1Behind = channel - 1;
+//        int channel1Front = channel + 1;
+//        
+//        int channel2Behind = channel2 - 1;
+//        int channel2Front = channel2 + 1;
+//        
+//        channel1Behind += 2;
+//        channel1Behind %= 34;
+//        channel += 2;
+//        channel %= 34;
+//        channel1Front += 2;
+//        channel1Front %= 34;
+//        
+//        
+//        channel2Behind += 2;
+//        channel2Behind %= 34;
+//        channel2 += 2;
+//        channel2 %= 34;
+//        channel2Front += 2;
+//        channel2Front %= 34;
+//        
+//        
+//        int channelPositionInDMX1Behind = 10 + (3*channel1Behind);
+//        int channelPositionInDMX = 10 + (3*channel);
+//        int channelPositionInDMX1Front = 10 + (3*channel1Front);
+//        
+//        int channelPositionInDMX2Behind = 10 + (3*channel2Behind);
+//        int channelPositionInDMX2 = 10 + (3*channel2);
+//        int channelPositionInDMX2Front = 10 + (3*channel2Front);
+//        
+//        
+//        dmxData_[channelPositionInDMX1Behind+0] = int(255*.5);
+//        dmxData_[channelPositionInDMX1Behind+1] = int(255*.5);
+//        dmxData_[channelPositionInDMX1Behind+2] = int(0);
+//        
+//        dmxData_[channelPositionInDMX+0] = int(255);
+//        dmxData_[channelPositionInDMX+1] = int(255);
+//        dmxData_[channelPositionInDMX+2] = int(0);
+//        
+//        dmxData_[channelPositionInDMX1Front+0] = int(255*.5);
+//        dmxData_[channelPositionInDMX1Front+1] = int(255*.5);
+//        dmxData_[channelPositionInDMX1Front+2] = int(0);
+//        
+//        
+//        dmxData_[channelPositionInDMX2Behind+0] = int(255*.5);
+//        dmxData_[channelPositionInDMX2Behind+1] = int(255*.5);
+//        dmxData_[channelPositionInDMX2Behind+2] = int(0);
+//        
+//        dmxData_[channelPositionInDMX2+0] = int(255);
+//        dmxData_[channelPositionInDMX2+1] = int(255);
+//        dmxData_[channelPositionInDMX2+2] = int(0);
+//        
+//        dmxData_[channelPositionInDMX2Front+0] = int(255*.5);
+//        dmxData_[channelPositionInDMX2Front+1] = int(255*.5);
+//        dmxData_[channelPositionInDMX2Front+2] = int(0);
+//    }
     
     //IDEA 3
 //    if (sideSection == 0) {
@@ -882,38 +943,38 @@ void ofApp::sendToDMX() {
 //    }
     
     
-//    // IDEA 3
-//    /* SECTION 1 */
-//    for (int i = 106; i <= 106+(2*3); i+=3) {
-//        dmxData_[i+0] = int(255);
-//        dmxData_[i+1] = int(0);
-//        dmxData_[i+2] = int(0);
-//    }
-//    
-//    for (int i = 10; i <= 10+(8*3); i+=3) {
-//        dmxData_[i+0] = int(255);
-//        dmxData_[i+1] = int(0);
-//        dmxData_[i+2] = int(0);
-//    }
-//    
-//    /* SECTION 2 */
-//    for (int i = 37; i <= 37+(6*3); i+=3) {
-//        dmxData_[i+0] = int(0);
-//        dmxData_[i+1] = int(255);
-//        dmxData_[i+2] = int(0);
-//    }
-//    for (int i = 82; i <= 82+(7*3); i+=3) {
-//        dmxData_[i+0] = int(0);
-//        dmxData_[i+1] = int(255);
-//        dmxData_[i+2] = int(0);
-//    }
-//    
-//    /* SECTION 3 */
-//    for (int i = 58; i <= 58+(7*3); i+=3) {
-//        dmxData_[i+0] = int(0);
-//        dmxData_[i+1] = int(0);
-//        dmxData_[i+2] = int(255);
-//    }
+    // IDEA 3
+    /* SECTION 1 */
+    for (int i = 106; i <= 106+(2*3); i+=3) {
+        dmxData_[i+0] = int(leftLevel);
+        dmxData_[i+1] = int(0);
+        dmxData_[i+2] = int(0);
+    }
+    
+    for (int i = 10; i <= 10+(8*3); i+=3) {
+        dmxData_[i+0] = int(leftLevel);
+        dmxData_[i+1] = int(0);
+        dmxData_[i+2] = int(0);
+    }
+    
+    /* SECTION 2 */
+    for (int i = 37; i <= 37+(6*3); i+=3) {
+        dmxData_[i+0] = int(0);
+        dmxData_[i+1] = int(centerLevel);
+        dmxData_[i+2] = int(0);
+    }
+    for (int i = 82; i <= 82+(7*3); i+=3) {
+        dmxData_[i+0] = int(0);
+        dmxData_[i+1] = int(centerLevel);
+        dmxData_[i+2] = int(0);
+    }
+    
+    /* SECTION 3 */
+    for (int i = 58; i <= 58+(7*3); i+=3) {
+        dmxData_[i+0] = int(0);
+        dmxData_[i+1] = int(0);
+        dmxData_[i+2] = int(rightLevel);
+    }
     
     dmxData_[0] = 0;
 
