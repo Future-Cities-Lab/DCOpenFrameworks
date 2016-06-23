@@ -269,17 +269,12 @@ void ofApp::update() {
         for (int i = 0; i < contourFinder.nBlobs; i++) {
             if (contourFinder.blobs[i].centroid.y >= 0.0 && contourFinder.blobs[i].centroid.y <= (240.0/3.0)) {
                 leftHasIt = true;
-                //scout << "Left" << endl;
             } else if (contourFinder.blobs[i].centroid.y > (240.0/3.0) && contourFinder.blobs[i].centroid.y <= 2.0*(240.0/3.0)) {
                 centerHasIt = true;
-                //cout << "Center" << endl;
             } else {
                 rightHasIt = true;
-                //cout << "Right" << endl;
             }
-            //cout << contourFinder.blobs[i].centroid.y << endl;
         }
-        //cout << "" << endl;
 
         if (leftHasIt) {
             if (leftLevel < 255.0) {
@@ -590,11 +585,7 @@ void ofApp::draw() {
                 contourFinder1.blobs[i].draw(578, 150);
             }
         }
-//        if (contourFinder1.nBlobs > 0) {
-//            avgYPosOfBlobs /= contourFinder1.nBlobs;
-//        } else {
-//            avgYPosOfBlobs = 0.0;
-//        }
+
         
         avgYPosOfBlobs = 0.0;
         int biggestBlobPos = 0;
@@ -945,35 +936,44 @@ void ofApp::sendToDMX() {
     
     // IDEA 3
     /* SECTION 1 */
+    float l_r = ofMap(leftLevel, 0.0, 255.0, bRed*.25, 255.0);
+    float l_g = ofMap(leftLevel, 0.0, 255.0, bGreen*.25, 255.0);
+    float l_b = ofMap(leftLevel, 0.0, 255.0, bBlue*.25, 0.0);
     for (int i = 106; i <= 106+(2*3); i+=3) {
-        dmxData_[i+0] = int(leftLevel);
-        dmxData_[i+1] = int(leftLevel);
-        dmxData_[i+2] = int(0);
+        dmxData_[i+0] = int(l_r);
+        dmxData_[i+1] = int(l_g);
+        dmxData_[i+2] = int(l_b);
     }
     
     for (int i = 10; i <= 10+(8*3); i+=3) {
-        dmxData_[i+0] = int(leftLevel);
-        dmxData_[i+1] = int(leftLevel);
-        dmxData_[i+2] = int(0);
+        dmxData_[i+0] = int(l_r);
+        dmxData_[i+1] = int(l_g);
+        dmxData_[i+2] = int(l_b);
     }
     
     /* SECTION 2 */
+    float c_r = ofMap(centerLevel, 0.0, 255.0, bRed*.25, 255.0);
+    float c_g = ofMap(centerLevel, 0.0, 255.0, bGreen*.25, 255.0);
+    float c_b = ofMap(centerLevel, 0.0, 255.0, bBlue*.25, 0.0);
     for (int i = 37; i <= 37+(6*3); i+=3) {
-        dmxData_[i+0] = int(centerLevel);
-        dmxData_[i+1] = int(centerLevel);
-        dmxData_[i+2] = int(0);
+        dmxData_[i+0] = int(c_r);
+        dmxData_[i+1] = int(c_g);
+        dmxData_[i+2] = int(c_b);
     }
     for (int i = 82; i <= 82+(7*3); i+=3) {
-        dmxData_[i+0] = int(centerLevel);
-        dmxData_[i+1] = int(centerLevel);
-        dmxData_[i+2] = int(0);
+        dmxData_[i+0] = int(c_r);
+        dmxData_[i+1] = int(c_g);
+        dmxData_[i+2] = int(c_b);
     }
     
     /* SECTION 3 */
+    float r_r = ofMap(rightLevel, 0.0, 255.0, bRed*.25, 255.0);
+    float r_g = ofMap(rightLevel, 0.0, 255.0, bGreen*.25, 255.0);
+    float r_b = ofMap(rightLevel, 0.0, 255.0, bBlue*.25, 0.0);
     for (int i = 58; i <= 58+(7*3); i+=3) {
-        dmxData_[i+0] = int(rightLevel);
-        dmxData_[i+1] = int(rightLevel);
-        dmxData_[i+2] = int(0);
+        dmxData_[i+0] = int(r_r);
+        dmxData_[i+1] = int(r_g);
+        dmxData_[i+2] = int(r_b);
     }
     
     dmxData_[0] = 0;
