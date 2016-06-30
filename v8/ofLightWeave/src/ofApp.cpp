@@ -499,11 +499,11 @@ void ofApp::draw() {
         
         /* drawing cameras */
         ofSetColor(255.0,0.0,0.0);
-        ofDrawBitmapString("Active column", 10, 30+10);
+        ofDrawBitmapString("Active column", 10, 350+20);
         ofSetColor(0.0,0.0,255.0);
-        ofDrawBitmapString("Active camera #", 10, 50+10);
+        ofDrawBitmapString("Active camera #", 10, 360+20);
         ofSetColor(255,105,180);
-        ofDrawBitmapString("# of Pedestrians", 10, 60+20);
+        ofDrawBitmapString("# of Pedestrians", 10, 370+20);
         ofSetColor(255.0, 255.0, 255.0);
         int cnt = 0;
         for (int i = 300-70; i <= 300+700; i+=70) {
@@ -706,14 +706,14 @@ void ofApp::draw() {
     vector<ofVideoDevice> devices = vidGrabber.listDevices();
 
     if (ANIMATION_STATE == ACTIVATED) {
-        ofDrawBitmapString("Swarm is active", 10, 100);
+        ofDrawBitmapString("Swarm is active", 10, 420);
     } else {
-        ofDrawBitmapString("Swarm is inactive", 10, 100);
+        ofDrawBitmapString("Swarm is inactive", 10, 420);
     }
     if (simulationIsOn) {
-        ofDrawBitmapString("Pedestrian simulation is active", 10, 120);
+        ofDrawBitmapString("Pedestrian simulation is active", 10, 440);
     } else {
-        ofDrawBitmapString("Pedestrian simulation is inactive", 10, 120);
+        ofDrawBitmapString("Pedestrian simulation is inactive", 10, 440);
     }
     ofDisableDepthTest();
 }
