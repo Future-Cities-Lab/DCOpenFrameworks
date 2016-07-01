@@ -71,11 +71,9 @@ float leftLevel = 0.0;
 float centerLevel = 0.0;
 float rightLevel = 0.0;
 
+float frontLevel = 0.0;
+float backLevel = 0.0;
 
-//ofColor ambientColor = ofColor(55.0, 55.0, 55.0);
-//ofColor swarmColor = ofColor(255.0, 0.0, 255.0);
-//ofColor addressableColor = ofColor(255.0, 255.0, 0.0);
-//ofColor immediateResponseColor;
 
 void ofApp::setup() {
     
@@ -319,32 +317,27 @@ void ofApp::update() {
                 rightLevel -= 1.0;
             }
         }
-//        cout << "Levels" << endl;
-//        cout << leftLevel << endl;
-//        cout << centerLevel << endl;
-//        cout << rightLevel << endl;
-//        cout << "" << endl;
 
-//        // CHECK AREA
-//        bool hasLargeEnoughArea = false;
-//        for (int i = 0; i < contourFinder.nBlobs; i++) {
-//            if (contourFinder.blobs[i].area >= minBlobArea) {
-//                hasLargeEnoughArea = true;
-//                break;
-//            }
-//        }
-//        
-//        if (hasLargeEnoughArea) {
-//            // CHECK BLOB #
-//            if (contourFinder.nBlobs >= numBlobsNeeded) {
-//                camera1BackgroundLevel += 15.0;
-//                camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
-//            }
-//        }
-//        if (contourFinder.nBlobs == 0) {
-//            camera1BackgroundLevel -= 15.0;
-//            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
-//        }
+        // CHECK AREA
+        bool hasLargeEnoughArea = false;
+        for (int i = 0; i < contourFinder.nBlobs; i++) {
+            if (contourFinder.blobs[i].area >= minBlobArea) {
+                hasLargeEnoughArea = true;
+                break;
+            }
+        }
+        
+        if (hasLargeEnoughArea) {
+            // CHECK BLOB #
+            if (contourFinder.nBlobs >= numBlobsNeeded) {
+                camera1BackgroundLevel += 15.0;
+                camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
+            }
+        }
+        if (contourFinder.nBlobs == 0) {
+            camera1BackgroundLevel -= 15.0;
+            camera1BackgroundLevel = ofClamp(camera1BackgroundLevel, 0.0, 250.0);
+        }
     }
     
     if (bNewFrame1){
@@ -360,24 +353,24 @@ void ofApp::update() {
         grayDiff1.threshold(threshold);
         contourFinder1.findContours(grayDiff1, 20, (340*240)/3, 10, true);
         
-//        bool hasLargeEnoughArea = false;
-//        for (int i = 0; i < contourFinder1.nBlobs; i++) {
-//            if (contourFinder1.blobs[i].area >= minBlobArea) {
-//                hasLargeEnoughArea = true;
-//                break;
-//            }
-//        }
-//        
-//        if (hasLargeEnoughArea) {
-//            if (contourFinder1.nBlobs >= numBlobsNeeded) {
-//                camera2BackgroundLevel+=15.0;
-//                camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
-//            }
-//        }
-//        if (contourFinder1.nBlobs == 0) {
-//            camera2BackgroundLevel-=15.0;
-//            camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
-//        }
+        bool hasLargeEnoughArea = false;
+        for (int i = 0; i < contourFinder1.nBlobs; i++) {
+            if (contourFinder1.blobs[i].area >= minBlobArea) {
+                hasLargeEnoughArea = true;
+                break;
+            }
+        }
+        
+        if (hasLargeEnoughArea) {
+            if (contourFinder1.nBlobs >= numBlobsNeeded) {
+                camera2BackgroundLevel+=15.0;
+                camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
+            }
+        }
+        if (contourFinder1.nBlobs == 0) {
+            camera2BackgroundLevel-=15.0;
+            camera2BackgroundLevel = ofClamp(camera2BackgroundLevel, 0, 250);
+        }
         
     }
     
@@ -773,21 +766,39 @@ void ofApp::sendToDMX() {
     ofColor swmColor = swarmColor;
 
     
+//    c.r = ofMap(newGauss, 245.0, 255.0, top2_r, swmColor.r);
+//    c.g = ofMap(newGauss, 245.0, 255.0, top2_g, swmColor.g);
+//    c.b = ofMap(newGauss, 245.0, 255.0, top2_b, swmColor.b);
+//    
+//    c2.r = ofMap(newGauss2, 245.0, 255.0, top2_r, swmColor.r);
+//    c2.g = ofMap(newGauss2, 245.0, 255.0, top2_g, swmColor.g);
+//    c2.b = ofMap(newGauss2, 245.0, 255.0, top2_b, swmColor.b);
+//    
+//    c3.r = ofMap(newGauss3, 245.0, 255.0, top_r, swmColor.r);
+//    c3.g = ofMap(newGauss3, 245.0, 255.0, top_g, swmColor.g);
+//    c3.b = ofMap(newGauss3, 245.0, 255.0, top_b, swmColor.b);
+//    
+//    c4.r = ofMap(newGauss4, 245.0, 255.0, top_r, swmColor.r);
+//    c4.g = ofMap(newGauss4, 245.0, 255.0, top_g, swmColor.g);
+//    c4.b = ofMap(newGauss4, 245.0, 255.0, top_b, swmColor.b);
+    
+    
     c.r = ofMap(newGauss, 245.0, 255.0, top2_r, swmColor.r);
     c.g = ofMap(newGauss, 245.0, 255.0, top2_g, swmColor.g);
     c.b = ofMap(newGauss, 245.0, 255.0, top2_b, swmColor.b);
-    
+
     c2.r = ofMap(newGauss2, 245.0, 255.0, top2_r, swmColor.r);
     c2.g = ofMap(newGauss2, 245.0, 255.0, top2_g, swmColor.g);
     c2.b = ofMap(newGauss2, 245.0, 255.0, top2_b, swmColor.b);
-    
+
     c3.r = ofMap(newGauss3, 245.0, 255.0, top_r, swmColor.r);
     c3.g = ofMap(newGauss3, 245.0, 255.0, top_g, swmColor.g);
     c3.b = ofMap(newGauss3, 245.0, 255.0, top_b, swmColor.b);
-    
+
     c4.r = ofMap(newGauss4, 245.0, 255.0, top_r, swmColor.r);
     c4.g = ofMap(newGauss4, 245.0, 255.0, top_g, swmColor.g);
     c4.b = ofMap(newGauss4, 245.0, 255.0, top_b, swmColor.b);
+
     
     //ofColor newC = ofColor(255, 0, 0);
     
