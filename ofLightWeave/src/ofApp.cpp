@@ -285,36 +285,38 @@ void ofApp::update() {
                 rightHasIt = true;
             }
         }
+        
+        float inc = 20.0;
 
         if (leftHasIt) {
             if (leftLevel < 255.0) {
-                leftLevel += 10.0;
+                leftLevel += inc;
             }
         } else {
             if (leftLevel > 0.0) {
-                leftLevel -= 10.0;
+                leftLevel -= inc;
             }
 
         }
         
         if (centerHasIt) {
             if (centerLevel < 255.0) {
-                centerLevel += 10.0;
+                centerLevel += inc;
             }
         } else {
             if (centerLevel > 0.0) {
-                centerLevel -= 10.0;
+                centerLevel -= inc;
             }
             
         }
         
         if (rightHasIt) {
             if (rightLevel < 255.0) {
-                rightLevel += 10.0;
+                rightLevel += inc;
             }
         } else {
             if (rightLevel > 0.0) {
-                rightLevel -= 10.0;
+                rightLevel -= inc;
             }
         }
 
