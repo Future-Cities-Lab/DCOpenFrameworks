@@ -3,6 +3,7 @@ ofxCsv
 ofxDmx
 ofxGenericDmx
 ofxGui
+ofxIpVideoGrabber
 ofxJSON
 ofxMailUtils
 ofxNetwork
