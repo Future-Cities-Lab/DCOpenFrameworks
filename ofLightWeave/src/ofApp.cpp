@@ -231,6 +231,7 @@ void ofApp::setup() {
     gui.add(ambientColor.setup("ambientColor", ofColor(100, 100, 140), ofColor(0, 0), ofColor(255, 255)));
     gui.add(swarmColor.setup("swarmColor", ofColor(100, 100, 140), ofColor(0, 0), ofColor(255, 255)));
     gui.add(addressableColor.setup("addressableColor", ofColor(100, 100, 140), ofColor(0, 0), ofColor(255, 255)));
+    gui.loadFromFile("settings.xml");
 
     
 }
@@ -490,7 +491,7 @@ void ofApp::draw() {
     ofSetColor(255.0,255.0,255.0);
     ofFill();
     for (int i = 0; i < 10; i++) {
-        ofDrawBitmapString(verbalInstructions[i], 10, (i*20)+600);
+        ofDrawBitmapString(verbalInstructions[i], 10, (i*20)+500);
     }
     
     if (cameraInfoIsOn) {
@@ -1140,6 +1141,11 @@ void ofApp::keyPressed(int key) {
         } else {
             simulationIsOn = true;
         }
+    } else if(key == 'p'){
+        gui.saveToFile("settings.xml");
+    }
+    else if(key == 'l'){
+        gui.loadFromFile("settings.xml");
     }
 }
 

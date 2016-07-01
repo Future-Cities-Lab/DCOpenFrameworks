@@ -90,7 +90,7 @@ class ofApp : public ofBaseApp{
         float gaussianBottom[1280] = {0.0};
     
     
-        string verbalInstructions[10] = {"'w' to move forward, 's' to move backward",
+        string verbalInstructions[12] = {"'w' to move forward, 's' to move backward",
                                     "'Up Arrow' to move up, 'Down Arrow' to move down",
                                     "'Left Arrow' to move leeft, 'Right Arrow' to move right",
                                     "'a' to toggle swarm",
@@ -98,7 +98,9 @@ class ofApp : public ofBaseApp{
                                     "Blue are office cameras",
                                     "'spacebar' resets camera",
                                     "'m' to toggle simulation",
-                                    "'i' for camera information"};
+                                    "'i' for camera information",
+                                    "'p' to save color config",
+                                    "'l' to load colro config"};
     
     
         DmxDevice* dmxInterface_;
