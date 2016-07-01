@@ -288,33 +288,33 @@ void ofApp::update() {
 
         if (leftHasIt) {
             if (leftLevel < 255.0) {
-                leftLevel += 1.0;
+                leftLevel += 10.0;
             }
         } else {
             if (leftLevel > 0.0) {
-                leftLevel -= 1.0;
+                leftLevel -= 10.0;
             }
 
         }
         
         if (centerHasIt) {
             if (centerLevel < 255.0) {
-                centerLevel += 1.0;
+                centerLevel += 10.0;
             }
         } else {
             if (centerLevel > 0.0) {
-                centerLevel -= 1.0;
+                centerLevel -= 10.0;
             }
             
         }
         
         if (rightHasIt) {
             if (rightLevel < 255.0) {
-                rightLevel += 1.0;
+                rightLevel += 10.0;
             }
         } else {
             if (rightLevel > 0.0) {
-                rightLevel -= 1.0;
+                rightLevel -= 10.0;
             }
         }
 
