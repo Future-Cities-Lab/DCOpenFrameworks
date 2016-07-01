@@ -144,7 +144,7 @@ void ofApp::setup(){
 //    }
     
     backgroundImage.loadImage("unnamed.jpg");
-    addCars(4);
+    addCars(2);
     addTrains();
     addPeople(20);
     addBikes(4);
