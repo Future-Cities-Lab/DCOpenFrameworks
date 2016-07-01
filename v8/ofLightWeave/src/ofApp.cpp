@@ -803,7 +803,6 @@ void ofApp::sendToDMX() {
     dmxData_[9] = int(c3.b);
 
     /* REPLICATE IDEA */
-    
     for (int i = 10; i <= 112; i+=3) {
         dmxData_[i] = int(c4.r);
         dmxData_[i+1] = int(c4.g);
@@ -817,7 +816,6 @@ void ofApp::sendToDMX() {
 //    }
     
     /* MINI SWARM */
-    
 //    ofVec2f btm = ofVec2f(0.0, 0.0);
 //    if (sideSection == 0) {
 //        
