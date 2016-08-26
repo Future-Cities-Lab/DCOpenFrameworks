@@ -88,7 +88,7 @@ void ofApp::setup() {
     memset( dmxData_, 0, DMX_DATA_LENGTH );
     
     //open the device
-    dmxInterface_ = ofxGenericDmx::createDevice(DmxDevice::DMX_DEVICE_RAW);
+    dmxInterface_ = ofxGenericDmx::openFirstDevice();
     bool opened = dmxInterface_->open();
     if ( dmxInterface_ == 0 || !opened ) {
         printf( "No FTDI Device Found\n" );
@@ -141,13 +141,13 @@ void ofApp::setup() {
     }
     
 
-//    vidGrabber.setDeviceID(pcCams[0]);
-    vidGrabber.setDeviceID(0);
+    vidGrabber.setDeviceID(pcCams[0]);
+//    vidGrabber.setDeviceID(0);
 
     vidGrabber.initGrabber(320,240);
     
-//    vidGrabber1.setDeviceID(pcCams[1]);
-    vidGrabber1.setDeviceID(0);
+    vidGrabber1.setDeviceID(pcCams[1]);
+//    vidGrabber1.setDeviceID(0);
 
     vidGrabber1.initGrabber(320,240);
     
